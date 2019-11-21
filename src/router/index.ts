@@ -5,7 +5,6 @@ import "nprogress/nprogress.css";
 
 import store from "../store";
 // import NotFound from "../views/404.vue";
-// import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -42,7 +41,10 @@ const routes = [
           icon: "el-icon-monitor",
           title: "设备相关"
         },
-        children: []
+        component: () =>
+          import(
+            /* webpackChunkName: "equipment" */ "../views/Equipment/index.vue"
+          )
       },
       {
         path: "/settings",

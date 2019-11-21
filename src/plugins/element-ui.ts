@@ -11,7 +11,10 @@ import {
   Submenu,
   Input,
   Row,
-  Col
+  Col,
+  Dialog,
+  Table,
+  Message
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -26,3 +29,7 @@ Vue.component(Submenu.name, Submenu);
 Vue.component(Input.name, Input);
 Vue.component(Row.name, Row);
 Vue.component(Col.name, Col);
+Vue.component(Dialog.name, Dialog);
+Vue.component(Table.name, Table);
+
+Vue.prototype.$message = Message;

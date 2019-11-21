@@ -35,7 +35,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import { SET_LOGOUT } from "@/store/constTypes";
-import { User } from "@/store/types";
+import { StoreUser } from "@/store/types";
 
 import moment from "moment";
 import { Moment } from "moment";
@@ -45,7 +45,7 @@ const userStore = namespace("@/store/modules/user");
 @Component
 export default class Header extends Vue {
   @userStore.Mutation(SET_LOGOUT) setLogout: any;
-  @State("user") user: User;
+  @State("user") user: StoreUser;
 
   inputValue = "";
   loading = false;

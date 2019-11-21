@@ -3,11 +3,12 @@
     <el-menu
       :collapse="isCollapse"
       :unique-opened="true"
-      default-active="/board"
+      :default-active="$router.currentRoute.path"
       background-color="#1c2327"
       text-color="#fff"
       active-text-color="#ffd04b"
       style="border-right: 0; padding-left: 8px"
+      router
     >
       <template v-for="item in menuData">
         <el-menu-item v-if="!item.children" :key="item.path" :index="item.path">
