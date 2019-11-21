@@ -20,17 +20,26 @@ const routes = [
         path: "/board",
         name: "board",
         meta: {
-          icon: "equipment",
+          icon: "el-icon-data-board",
           title: "公告"
         },
         component: () =>
           import(/* webpackChunkName: "layout" */ "../views/Board.vue")
       },
       {
+        path: "/maintenance",
+        name: "maintenance",
+        meta: {
+          icon: "el-icon-cpu",
+          title: "维修相关"
+        },
+        children: []
+      },
+      {
         path: "/equipment",
         name: "equipment",
         meta: {
-          icon: "equipment",
+          icon: "el-icon-monitor",
           title: "设备相关"
         },
         children: []
@@ -39,7 +48,7 @@ const routes = [
         path: "/settings",
         name: "settings",
         meta: {
-          icon: "setting",
+          icon: "el-icon-setting",
           title: "设置相关"
         },
         component: { render: (h: any) => h("router-view") },
@@ -48,7 +57,7 @@ const routes = [
             path: "/admin",
             name: "admin",
             meta: {
-              icon: "setting",
+              icon: "el-icon-user",
               title: "admin"
             }
           },
@@ -56,7 +65,7 @@ const routes = [
             path: "/department",
             name: "department",
             meta: {
-              icon: "setting",
+              icon: "el-icon-office-building",
               title: "department"
             }
           }

@@ -1,12 +1,18 @@
 <template>
   <div>
     <el-container style="min-height: 100vh">
-      <el-aside>
-        <side-menu />
+      <el-aside :width="collapsed ? '65px' : '280px'" class="side">
+        <div class="logo">{{ collapsed ? "IT" : "IT设备管理系统" }}</div>
+        <side-menu :is-collapse="collapsed" />
       </el-aside>
       <el-container>
-        <el-header>
-          <header />
+        <el-header class="header">
+          <i
+            :class="collapsed ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+            @click="collapsed = !collapsed"
+            style="font-size: 40px"
+          ></i>
+          <Header />
         </el-header>
         <el-main style="margin: 0 16px">
           <router-view></router-view>
@@ -21,11 +27,33 @@
 import Header from "./Header.vue";
 import SideMenu from "@/layouts/SideMenu.vue";
 import { Vue, Component } from "vue-property-decorator";
+
 @Component({
   components: {
     Header,
     SideMenu
   }
 })
-export default class BasicLayout extends Vue {}
+export default class BasicLayout extends Vue {
+  collapsed = false;
+}
 </script>
+
+<style scoped lang="scss">
+.logo {
+  font-size: 28px;
+  text-align: center;
+  padding-top: 8px;
+  margin-bottom: 12px;
+}
+
+.side {
+  background: #1c2327;
+  color: aliceblue;
+  box-shadow: 5px 0 5px 0 #c1c1c1;
+}
+.header {
+  padding: 10px 20px;
+  box-shadow: 5px 0 5px 0 #c1c1c1;
+}
+</style>

@@ -1,20 +1,31 @@
 <template>
   <div>
-    <el-menu :collapse="isCollapse" :unique-opened="true">
+    <el-menu
+      :collapse="isCollapse"
+      :unique-opened="true"
+      default-active="/board"
+      background-color="#1c2327"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+      style="border-right: 0; padding-left: 8px"
+    >
       <template v-for="item in menuData">
-        <el-menu-item v-if="!item.children" :key="item.path">
-          <template slot="title">
-            <span>{{ item.meta.title }}</span>
-          </template>
+        <el-menu-item v-if="!item.children" :key="item.path" :index="item.path">
+          <i :class="item.meta.icon"></i>
+          <span slot="title">{{ item.meta.title }}</span>
         </el-menu-item>
         <el-submenu v-else :index="item.path" :key="item.path">
           <template slot="title">
+            <i :class="item.meta.icon"></i>
             <span>{{ item.meta.title }}</span>
           </template>
-          <el-menu-item v-for="_item in item.children" :key="_item.path">
-            <template slot="title">
-              <span>{{ _item.meta.title }}</span>
-            </template>
+          <el-menu-item
+            v-for="_item in item.children"
+            :key="_item.path"
+            :index="_item.path"
+          >
+            <i :class="_item.meta.icon"></i>
+            <span slot="title">{{ _item.meta.title }}</span>
           </el-menu-item>
         </el-submenu>
       </template>
@@ -28,10 +39,14 @@ import { auth } from "@/utils/common";
 import router from "@/router";
 import { RouteConfig } from "vue-router";
 
-@Component
+@Component({
+  props: {
+    isCollapse: Boolean
+  }
+})
 export default class SideMenu extends Vue {
   menuData: RouteConfig[] = [];
-  isCollapse = false;
+  // isCollapse = false;
 
   getMenuData(routes: RouteConfig[]) {
     const menuData: RouteConfig[] = [];
@@ -59,7 +74,6 @@ export default class SideMenu extends Vue {
   mounted() {
     //@ts-ignore
     this.menuData = this.getMenuData(router.options.routes);
-    console.log(this.menuData);
   }
 }
 </script>

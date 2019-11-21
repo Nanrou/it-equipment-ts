@@ -8,7 +8,10 @@ import {
   Main,
   Menu,
   MenuItem,
-  Submenu
+  Submenu,
+  Input,
+  Row,
+  Col
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -20,3 +23,6 @@ Vue.component(Main.name, Main);
 Vue.component(Menu.name, Menu);
 Vue.component(MenuItem.name, MenuItem);
 Vue.component(Submenu.name, Submenu);
+Vue.component(Input.name, Input);
+Vue.component(Row.name, Row);
+Vue.component(Col.name, Col);
