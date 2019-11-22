@@ -30,3 +30,24 @@ export interface FormOptions {
   value: string | number;
   disabled?: boolean;
 }
+
+export interface MyResponse {
+  errcode: number;
+  errmsg: string;
+  data: any;
+}
+
+export interface AddEquipmentInterface {
+  category: string;
+  brand: string;
+  modelNumber: string;
+  serialNumber: string;
+  price: number;
+  purchasingTime: string;
+  guarantee: number;
+  remark: string;
+  status: number;
+  user: string;
+  owner: string; // todo change table
+  department: string;
+}

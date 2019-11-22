@@ -169,9 +169,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref, Prop } from "vue-property-decorator";
-import { Equipment, FormOptions } from "@/store/types";
+import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
+import { Equipment, FormOptions, AddEquipmentInterface } from "@/store/types";
 import { CategoryOptions } from "@/store/constTypes";
+import { EQUIPMENT_ADD_API } from "@/store/api";
 import { State } from "vuex-class";
 import { StoreUser } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
@@ -251,7 +252,37 @@ export default class EquipmentFrom extends Vue {
     } else {
       this.equipmentFormIns.validate(valid => {
         if (valid) {
-          console.log(this.equipmentForm);
+          this.loadingAtSubmit = true;
+          this.initiativeClose = true;
+          let data: AddEquipmentInterface = {
+            category: _equipment.category,
+            brand: _equipment.brand,
+            modelNumber: _equipment.modelNumber,
+            serialNumber: _equipment.serialNumber,
+            price: _equipment.price || 0,
+            purchasingTime: _equipment.purchasingTime,
+            guarantee: _equipment.guarantee || 12,
+            remark: _equipment.remark,
+            status: _equipment.status,
+            user: _equipment.user,
+            owner: _equipment.owner,
+            department: _equipment.department
+          };
+          // todo hardware
+          this.$axios
+            .post(EQUIPMENT_ADD_API, data)
+            .then(response => {
+              let { errcode, errmsg } = response.data;
+              if (errcode === 0) {
+                this.$message.success("新增设备成功！");
+                this.handleClose();
+              } else {
+                this.$message.error(errmsg);
+              }
+            })
+            .finally(() => {
+              this.loadingAtSubmit = false;
+            });
         } else {
           return false;
         }
@@ -276,6 +307,9 @@ export default class EquipmentFrom extends Vue {
     }
     return true;
   }
+
+  @Emit("close")
+  handleClose() {}
 }
 </script>
 

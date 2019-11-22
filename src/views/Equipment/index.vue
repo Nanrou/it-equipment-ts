@@ -12,13 +12,14 @@
       title="新增设备"
       :visible.sync="visible"
       :destroy-on-close="true"
-      :before-close="closeDialog"
+      :before-close="closeDialogCheck"
       width="520px"
     >
       <equipment-form
         :action="'add'"
         ref="equipmentForm"
         style="padding-left: 12px"
+        v-on:close="closeDialog"
       />
     </el-dialog>
   </div>
@@ -44,7 +45,7 @@ export default class EquipmentIndex extends Vue {
     this.visible = true;
   }
 
-  closeDialog(done: any) {
+  closeDialogCheck(done: any) {
     //@ts-ignore
     if (this.equipmentForm.confirmCheck()) {
       this.$confirm("内容已发生改变，确认关闭？")
@@ -55,6 +56,10 @@ export default class EquipmentIndex extends Vue {
     } else {
       done();
     }
+  }
+
+  closeDialog() {
+    this.visible = false;
   }
 }
 </script>
