@@ -164,6 +164,18 @@
           <el-button @click="resetEquipmentForm">重置</el-button>
         </el-form-item>
       </template>
+      <template v-else>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="addEquipment"
+            :loading="loadingAtSubmit"
+            :disabled="!equipmentFormCompliance"
+            >更新</el-button
+          >
+          <el-button @click="resetEquipmentForm">取消</el-button>
+        </el-form-item>
+      </template>
     </el-form>
   </div>
 </template>
@@ -180,6 +192,7 @@ import { ElForm } from "element-ui/types/form";
 @Component
 export default class EquipmentFrom extends Vue {
   @Prop(String) action: "update" | "add";
+  @Prop() originEquipmentForm?: Equipment;
   @State("user") user: StoreUser;
   @Ref("equipmentForm") equipmentFormIns: ElForm;
 
@@ -304,12 +317,29 @@ export default class EquipmentFrom extends Vue {
     }
     if (this.action === "add") {
       return Object.values(this.equipmentForm).some(ele => Boolean(ele));
+    } else {
+      return this.equipmentFormCompliance;
     }
-    return true;
   }
 
   @Emit("close")
   handleClose() {}
+
+  get equipmentFormCompliance(): boolean {
+    if (this.originEquipmentForm) {
+      return !Object.keys(this.equipmentForm).some(
+        //@ts-ignore 校验一致性
+        key => this.equipmentForm[key] !== this.originEquipmentForm[key]
+      );
+    }
+    return true;
+  }
+
+  mounted() {
+    if (this.action === "update") {
+      this.equipmentForm = { ...this.originEquipmentForm } as Equipment;
+    }
+  }
 }
 </script>
 

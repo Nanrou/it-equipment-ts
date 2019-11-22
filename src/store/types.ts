@@ -31,12 +31,6 @@ export interface FormOptions {
   disabled?: boolean;
 }
 
-export interface MyResponse {
-  errcode: number;
-  errmsg: string;
-  data: any;
-}
-
 export interface AddEquipmentInterface {
   category: string;
   brand: string;

@@ -53,6 +53,7 @@
       </el-table-column>
     </el-table>
     <equipment-detail ref="equipmentDetail" />
+    <equipment-drawer ref="equipmentDrawer" />
   </div>
 </template>
 
@@ -63,14 +64,17 @@ import { LOCAL_EQUIPMENTS } from "@/store/constTypes";
 import { Equipment } from "@/store/types";
 import { AxiosResponse } from "axios";
 import EquipmentDetail from "@/views/Equipment/EquipmentDetail.vue";
+import EquipmentDrawer from "@/views/Equipment/EquipmentDrawer.vue";
 
 @Component({
   components: {
+    EquipmentDrawer,
     EquipmentDetail
   }
 })
 export default class EquipmentTable extends Vue {
   @Ref() readonly equipmentDetail: EquipmentDetail;
+  @Ref() readonly equipmentDrawer: EquipmentDrawer;
 
   tableLoading = false;
   tableData: Equipment[] = [];
@@ -100,7 +104,8 @@ export default class EquipmentTable extends Vue {
   }
 
   editEquipment(equipment: Equipment) {
-    console.log(equipment);
+    //@ts-ignore todo rm
+    this.equipmentDrawer.openDrawer(equipment);
   }
 
   openDetail(equipment: Equipment) {
