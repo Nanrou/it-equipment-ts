@@ -12,14 +12,19 @@
         <p>{{ user.department }}</p>
         <p>{{ user.name }}</p>
       </el-col>
-      <el-col :span="2" :offset="1">
-        <el-button
-          @click="logout"
-          :loading="loading"
-          type="primary"
-          style="margin-right: 12px"
-          >登出</el-button
-        >
+      <el-col :span="1" :offset="2">
+        <el-tooltip content="登出">
+          <el-button
+            @click="logout"
+            :loading="loading"
+            type="text"
+            style="margin-right: 12px; color: gray"
+          >
+            <svg class="icon" @click="logout">
+              <use xlink:href="#icon-log-out" />
+            </svg>
+          </el-button>
+        </el-tooltip>
       </el-col>
       <el-col :span="4" :offset="1">
         <div style="text-align: right; padding-left: 16px; font-size: 14px">
@@ -32,6 +37,7 @@
 </template>
 
 <script lang="ts">
+require("../assets/iconfont/log-out");
 import { Vue, Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import { SET_LOGOUT } from "@/store/constTypes";
@@ -54,7 +60,9 @@ export default class Header extends Vue {
 
   logout(): void {
     this.loading = true;
-    this.setLogout();
+    // todo fix
+    // this.setLogout();
+    console.log("log out");
     this.loading = false;
   }
 
@@ -79,5 +87,14 @@ export default class Header extends Vue {
 
 p {
   margin: 0;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  text-align: center;
 }
 </style>

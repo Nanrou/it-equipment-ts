@@ -9,3 +9,17 @@ export const LOCAL_EQUIPMENTS = "it-equipments";
 const USER_NAMESPACE = "user";
 export const SET_LOGIN = `${USER_NAMESPACE}/setLogin`;
 export const SET_LOGOUT = `${USER_NAMESPACE}/setLogout`;
+
+// Some options
+export const CategoryOptions = [
+  "笔记本电脑",
+  "台式电脑",
+  "手机",
+  "手持平板",
+  "抄表器",
+  "一体打印机",
+  "数码复合机",
+  "传真机",
+  "卫星电话",
+  "其他设备"
+];

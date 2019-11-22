@@ -8,14 +8,14 @@ export interface StoreUser {
 }
 
 export interface Equipment {
-  key: string; // todo 加密转义
+  eid?: string; // todo 加密转义
   category: string;
   brand: string;
   modelNumber: string;
   serialNumber: string;
   price: number;
   purchasingTime: string;
-  guarantee: string;
+  guarantee: number;
   remark: string;
   status: number;
   user: string;
@@ -23,4 +23,10 @@ export interface Equipment {
   department: string;
   edit: string;
   del_flag: boolean;
+}
+
+export interface FormOptions {
+  label: string;
+  value: string | number;
+  disabled?: boolean;
 }

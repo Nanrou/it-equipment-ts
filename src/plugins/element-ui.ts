@@ -14,7 +14,21 @@ import {
   Col,
   Dialog,
   Table,
-  Message
+  TableColumn,
+  Message,
+  Loading,
+  Tooltip,
+  Tag,
+  Drawer,
+  Divider,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  DatePicker,
+  InputNumber,
+  Switch,
+  MessageBox
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -31,5 +45,22 @@ Vue.component(Row.name, Row);
 Vue.component(Col.name, Col);
 Vue.component(Dialog.name, Dialog);
 Vue.component(Table.name, Table);
+Vue.component(TableColumn.name, TableColumn);
+Vue.component(Tooltip.name, Tooltip);
+Vue.component(Tag.name, Tag);
+Vue.component(Drawer.name, Drawer);
+Vue.component(Divider.name, Divider);
+Vue.component(Form.name, Form);
+Vue.component(FormItem.name, FormItem);
+Vue.component(Select.name, Select);
+Vue.component(Option.name, Option);
+Vue.component(DatePicker.name, DatePicker);
+Vue.component(InputNumber.name, InputNumber);
+Vue.component(Switch.name, Switch);
 
+Vue.use(Loading.directive);
 Vue.prototype.$message = Message;
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$prompt = MessageBox.prompt;
