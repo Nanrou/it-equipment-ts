@@ -7,7 +7,7 @@ const state = {
   name: "abc", // 真名
   role: -1, // 角色
   // department: "", // 所属部门
-  department: "department", // 所属部门
+  department: "where", // 所属部门
   isGlobal: false, //部门是否属于global
   phone: "" // 电话
 };

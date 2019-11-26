@@ -34,26 +34,50 @@
       </el-table-column>
       <el-table-column label="设备状态" prop="status">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" type="success">正常</el-tag>
+          <el-tag
+            v-if="scope.row.status === 0"
+            type="success"
+            @click.stop="openStatusForm(scope.row)"
+            >正常</el-tag
+          >
           <el-tag v-else-if="scope.row.status === 1" type="warning"
             >维修</el-tag
           >
-          <el-tag v-else-if="scope.row.status === 2" type="info">备用</el-tag>
-          <el-tag v-else-if="scope.row.status === 3" type="danger">报废</el-tag>
+          <el-tag
+            v-else-if="scope.row.status === 2"
+            type="info"
+            @click.stop="openStatusForm(scope.row)"
+            >备用</el-tag
+          >
+          <el-tag
+            v-else-if="scope.row.status === 3"
+            type="danger"
+            @click.stop="openStatusForm(scope.row)"
+            >报废</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.status !== 1"
             type="text"
             icon="el-icon-edit"
             @click.stop="editEquipment(scope.row)"
           ></el-button>
+          <el-tooltip content="设备维修中" v-else>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              :disabled="true"
+            ></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <equipment-detail ref="equipmentDetail" />
     <equipment-drawer ref="equipmentDrawer" />
+    <equipment-status ref="equipmentStatus" />
   </div>
 </template>
 
@@ -65,9 +89,11 @@ import { Equipment } from "@/store/types";
 import { AxiosResponse } from "axios";
 import EquipmentDetail from "@/views/Equipment/EquipmentDetail.vue";
 import EquipmentDrawer from "@/views/Equipment/EquipmentDrawer.vue";
+import EquipmentStatus from "@/views/Equipment/EquipmentStatus.vue";
 
 @Component({
   components: {
+    EquipmentStatus,
     EquipmentDrawer,
     EquipmentDetail
   }
@@ -75,6 +101,7 @@ import EquipmentDrawer from "@/views/Equipment/EquipmentDrawer.vue";
 export default class EquipmentTable extends Vue {
   @Ref() readonly equipmentDetail: EquipmentDetail;
   @Ref() readonly equipmentDrawer: EquipmentDrawer;
+  @Ref() readonly equipmentStatus: EquipmentStatus;
 
   tableLoading = false;
   tableData: Equipment[] = [];
@@ -111,6 +138,17 @@ export default class EquipmentTable extends Vue {
   openDetail(equipment: Equipment) {
     //@ts-ignore todo rm
     this.equipmentDetail.openDialog(equipment);
+  }
+
+  openStatusForm(equipment: Equipment) {
+    //@ts-ignore todo rm
+    this.equipmentStatus.openDialog(
+      equipment.eid,
+      equipment.status,
+      equipment.user,
+      equipment.owner,
+      equipment.department
+    );
   }
 
   mounted() {

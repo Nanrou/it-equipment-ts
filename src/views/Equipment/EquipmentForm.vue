@@ -198,7 +198,23 @@ export default class EquipmentFrom extends Vue {
 
   loadingAtSubmit = false;
   initiativeClose = false;
-  equipmentForm: Equipment | {} = {};
+  equipmentForm: Equipment = new (class implements Equipment {
+    brand: string;
+    category: string;
+    del_flag: boolean;
+    department: string;
+    edit: string;
+    eid: string;
+    guarantee: number;
+    modelNumber: string;
+    owner: string;
+    price: number;
+    purchasingTime: string;
+    remark: string;
+    serialNumber: string;
+    status: number;
+    user: string;
+  })();
   otherCategory: string = "";
 
   categoryOptions: FormOptions[] = CategoryOptions.map(ele => ({
@@ -326,8 +342,8 @@ export default class EquipmentFrom extends Vue {
   handleClose() {}
 
   get equipmentFormCompliance(): boolean {
-    if (this.originEquipmentForm) {
-      return !Object.keys(this.equipmentForm).some(
+    if (this.action === "update") {
+      return Object.keys(this.equipmentForm).some(
         //@ts-ignore 校验一致性
         key => this.equipmentForm[key] !== this.originEquipmentForm[key]
       );

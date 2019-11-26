@@ -6,7 +6,7 @@
     :destroy-on-close="true"
   >
     <equipment-form
-      ref="equipmentForm"
+      ref="equipmentFormComponent"
       :action="'update'"
       :origin-equipment-form="equipmentForm"
     />
