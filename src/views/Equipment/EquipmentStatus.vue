@@ -4,7 +4,7 @@
     :visible.sync="visible"
     :destroy-on-close="true"
     :before-close="closeDialogCheck"
-    width="520px"
+    width="360px"
   >
     <el-select
       placeholder="请选择"
@@ -19,15 +19,56 @@
         :disabled="item.value === originStatus"
       ></el-option>
     </el-select>
+    <template v-if="!equipmentFormCompliance">
+      <template v-if="statusForm.status === 0">
+        <el-form
+          :model="statusForm"
+          :rules="statusFormRule"
+          v-loading="loadingAtSubmit"
+          style="margin-top: 16px"
+          ref="statusForm"
+        >
+          <el-form-item label="使用人" prop="user">
+            <el-input v-model="statusForm.user"></el-input>
+          </el-form-item>
+          <el-form-item label="责任人" prop="owner">
+            <el-input v-model="statusForm.owner"></el-input>
+          </el-form-item>
+          <el-form-item label="所属部门" prop="department">
+            <el-input
+              v-model="statusForm.department"
+              :disabled="true"
+              style="width: 180px"
+            ></el-input>
+            &nbsp;
+          </el-form-item>
+        </el-form>
+        <div style="text-align: center">
+          <el-button type="primary" @click="handleChangeStatus">确定</el-button>
+        </div>
+      </template>
+      <template v-else>
+        <el-button
+          type="primary"
+          style="margin-left: 12px"
+          @click="handleChangeStatus"
+          >确定</el-button
+        >
+      </template>
+    </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Ref } from "vue-property-decorator";
+import { ElForm } from "element-ui/types/form";
 
 @Component
 export default class EquipmentStatus extends Vue {
+  @Ref("statusForm") statusFormIns: ElForm;
+
   visible = false;
+  loadingAtSubmit = false;
   originStatus: number = 0;
   statusForm = {
     eid: "",
@@ -35,6 +76,13 @@ export default class EquipmentStatus extends Vue {
     user: "",
     owner: "",
     department: ""
+  };
+  statusFormRule = {
+    user: [{ required: true, message: "必须选择联系人", trigger: "blur" }],
+    owner: [{ required: true, message: "必须选择负责人", trigger: "blur" }],
+    department: [
+      { required: true, message: "必须选择所属部门", trigger: "blur" }
+    ]
   };
   statusOptions = [
     { label: "正常", value: 0 },
@@ -56,6 +104,29 @@ export default class EquipmentStatus extends Vue {
     this.statusForm.owner = owner;
     this.statusForm.department = department;
     this.visible = true;
+  }
+
+  handleChangeStatus() {
+    if (this.statusForm.status === 0) {
+      this.statusFormIns.validate(valid => {
+        if (valid) {
+          this.handleChangeStatusInner();
+        } else {
+          return false;
+        }
+      });
+    } else {
+      let _text = this.statusForm.status === 2 ? "备用" : "报废";
+      this.$confirm(`确定将该设备状态改为${_text}？`)
+        .then(_ => {
+          this.handleChangeStatusInner();
+        })
+        .catch(_ => {});
+    }
+  }
+
+  handleChangeStatusInner() {
+    console.log(this.statusForm);
   }
 
   closeDialogCheck(done: any) {
