@@ -4,7 +4,7 @@
     :visible.sync="visible"
     :destroy-on-close="true"
     :before-close="closeDialogCheck"
-    width="360px"
+    width="380px"
   >
     <el-select
       placeholder="请选择"
@@ -44,7 +44,12 @@
           </el-form-item>
         </el-form>
         <div style="text-align: center">
-          <el-button type="primary" @click="handleChangeStatus">确定</el-button>
+          <el-button
+            type="primary"
+            :loading="loadingAtSubmit"
+            @click="handleChangeStatus"
+            >确定</el-button
+          >
         </div>
       </template>
       <template v-else>
@@ -52,6 +57,7 @@
           type="primary"
           style="margin-left: 12px"
           @click="handleChangeStatus"
+          :loading="loadingAtSubmit"
           >确定</el-button
         >
       </template>
@@ -62,6 +68,8 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import { ElForm } from "element-ui/types/form";
+import { AxiosResponse } from "axios";
+import { EQUIPMENT_CHANGE_STATUS_API } from "@/store/api";
 
 @Component
 export default class EquipmentStatus extends Vue {
@@ -126,7 +134,24 @@ export default class EquipmentStatus extends Vue {
   }
 
   handleChangeStatusInner() {
-    console.log(this.statusForm);
+    this.loadingAtSubmit = true;
+    this.$axios
+      .patch(
+        EQUIPMENT_CHANGE_STATUS_API + `?eid=${this.statusForm.eid}`,
+        this.statusForm
+      )
+      .then((response: AxiosResponse) => {
+        let { errcode, errmsg } = response.data;
+        if (errcode === 0) {
+          this.$message.success("更新成功");
+        } else {
+          this.$message.error(errmsg);
+        }
+      })
+      .finally(() => {
+        this.loadingAtSubmit = false;
+        this.visible = false;
+      });
   }
 
   closeDialogCheck(done: any) {

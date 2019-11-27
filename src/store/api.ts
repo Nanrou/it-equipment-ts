@@ -5,5 +5,6 @@ export const LOGOUT_API = "/api/user/logout";
 export const EQUIPMENT_ADD_API = "/api/equipment/add";
 export const EQUIPMENT_UPDATE_API = "/api/equipment/update";
 export const EQUIPMENT_QUERY_API = "/api/equipment/query";
+export const EQUIPMENT_CHANGE_STATUS_API = "/api/equipment/changeStatus";
 
 export const DEPARTMENT_STRUCTURE_API = "/api/relation/query";
