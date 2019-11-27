@@ -175,16 +175,27 @@
         <el-form-item>
           <el-button
             type="primary"
-            @click="addEquipment"
             :loading="loadingAtSubmit"
             :disabled="!equipmentFormCompliance"
+            @click="updateEquipment"
             >更新</el-button
           >
-          <el-button @click="resetEquipmentForm">取消</el-button>
+          <el-button @click="handleClose">取消</el-button>
+          <el-tooltip content="更新硬件信息">
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleOpenHardware"
+            />
+          </el-tooltip>
         </el-form-item>
       </template>
     </el-form>
-    <equipment-hardware :action="action" ref="hardware" />
+    <equipment-hardware
+      :action="action"
+      ref="hardware"
+      v-on:setHardware="setHardware"
+    />
   </div>
 </template>
 
@@ -192,17 +203,15 @@
 import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { Equipment, FormOptions, AddEquipmentInterface } from "@/store/types";
 import { CategoryOptions } from "@/store/constTypes";
-import { EQUIPMENT_ADD_API } from "@/store/api";
+import { EQUIPMENT_ADD_API, EQUIPMENT_UPDATE_API } from "@/store/api";
 import { State } from "vuex-class";
 import { StoreUser, Hardware } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
 import EquipmentHardware from "@/views/Equipment/EquipmentHardware.vue";
+import { AxiosResponse } from "axios";
 
 @Component({
-  components: { EquipmentHardware },
-  props: {
-    EquipmentHardware
-  }
+  components: { EquipmentHardware }
 })
 export default class EquipmentFrom extends Vue {
   @Prop(String) action: "update" | "add";
@@ -213,32 +222,32 @@ export default class EquipmentFrom extends Vue {
 
   loadingAtSubmit = false;
   initiativeClose = false;
-  equipmentForm: Equipment = new (class implements Equipment {
-    brand: string;
-    category: string;
-    del_flag: boolean;
-    department: string;
-    edit: string;
-    eid: string;
-    guarantee: number;
-    modelNumber: string;
-    owner: string;
-    price: number;
-    purchasingTime: string;
-    remark: string;
-    serialNumber: string;
-    status: number;
-    user: string;
-  })();
-  hardware: Hardware = new (class implements Hardware {
-    cpu: string;
-    disk: string;
-    gpu: string;
-    ip: string;
-    mainBoard: string;
-    memory: string;
-    remark: string;
-  })();
+  equipmentForm: Equipment = {
+    brand: "",
+    category: "",
+    del_flag: false,
+    department: "",
+    edit: "",
+    eid: "",
+    guarantee: 12,
+    modelNumber: "",
+    owner: "",
+    price: 0,
+    purchasingTime: "",
+    remark: "",
+    serialNumber: "",
+    status: 0,
+    user: ""
+  };
+  hardware: Hardware = {
+    cpu: "",
+    disk: "",
+    gpu: "",
+    ip: "",
+    mainBoard: "",
+    memory: "",
+    remark: ""
+  };
   otherCategory: string = "";
 
   categoryOptions: FormOptions[] = CategoryOptions.map(ele => ({
@@ -319,9 +328,9 @@ export default class EquipmentFrom extends Vue {
             status: _equipment.status,
             user: _equipment.user,
             owner: _equipment.owner,
-            department: _equipment.department
+            department: _equipment.department,
+            hardware: this.hardware
           };
-          // todo hardware
           this.$axios
             .post(EQUIPMENT_ADD_API, data)
             .then(response => {
@@ -335,6 +344,46 @@ export default class EquipmentFrom extends Vue {
             })
             .finally(() => {
               this.loadingAtSubmit = false;
+            });
+        } else {
+          return false;
+        }
+      });
+    }
+  }
+
+  updateEquipment() {
+    let _equipment = this.equipmentForm as Equipment;
+    let _originEquipment = this.originEquipmentForm as Equipment;
+    if (!this.checkOtherCategory(_equipment)) {
+      return false;
+    } else if (!this.checkStatusValidate(_equipment)) {
+      return false;
+    } else {
+      this.equipmentFormIns.validate(valid => {
+        if (valid) {
+          this.loadingAtSubmit = true;
+          let _res = {};
+          Object.keys(_equipment).map(k => {
+            //@ts-ignore
+            if (_equipment[k] !== _originEquipment[k]) {
+              //@ts-ignore
+              _res[k] = _equipment[k];
+            }
+          });
+          this.$axios
+            .patch(EQUIPMENT_UPDATE_API + `?eid=${_equipment.eid}`, _res)
+            .then((response: AxiosResponse) => {
+              let { errcode, errmsg } = response.data;
+              if (errcode === 0) {
+                this.$message.success("更新设备信息成功！");
+              } else {
+                this.$message.error(errmsg);
+              }
+            })
+            .finally(() => {
+              this.loadingAtSubmit = false;
+              this.handleClose();
             });
         } else {
           return false;
@@ -363,15 +412,23 @@ export default class EquipmentFrom extends Vue {
   }
 
   @Emit("close")
-  handleClose() {}
+  handleClose() {
+    // 找不到直接关闭drawer的方法，visible设为false不会销毁
+    if (this.action === "update") {
+      //@ts-ignore
+      this.equipmentForm = { ...this.originEquipmentForm };
+    }
+  }
 
   handleOpenHardware() {
     //@ts-ignore
-    this.hardwareIns.openDialog();
+    this.hardwareIns.openDialog(this.equipmentForm.eid);
   }
 
   setHardware(h: Hardware) {
     this.hardware = { ...h };
+    //@ts-ignore
+    this.hardwareIns.closeDialog();
   }
 
   get equipmentFormCompliance(): boolean {

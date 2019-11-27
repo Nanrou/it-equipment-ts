@@ -9,6 +9,7 @@
       ref="equipmentFormComponent"
       :action="'update'"
       :origin-equipment-form="equipmentForm"
+      v-on:close="closeDrawer"
     />
   </el-drawer>
 </template>
@@ -45,7 +46,9 @@ export default class EquipmentDrawer extends Vue {
     }
   }
 
-  closeDrawer() {}
+  closeDrawer() {
+    this.visible = false;
+  }
 }
 </script>
 

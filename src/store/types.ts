@@ -44,6 +44,7 @@ export interface AddEquipmentInterface {
   user: string;
   owner: string; // todo change table
   department: string;
+  hardware?: any;
 }
 
 export interface Hardware {

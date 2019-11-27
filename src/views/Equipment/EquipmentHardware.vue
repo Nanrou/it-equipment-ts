@@ -7,7 +7,12 @@
     :visible.sync="visible"
     width="420px"
   >
-    <el-form :model="hardwareForm" ref="hardwareForm" label-width="80px">
+    <el-form
+      v-loading="loadingAtRequest"
+      :model="hardwareForm"
+      ref="hardwareForm"
+      label-width="80px"
+    >
       <el-form-item label="IP地址" prop="ip">
         <el-input
           v-model="hardwareForm.ip"
@@ -61,7 +66,13 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">确定</el-button>
+        <el-button
+          type="primary"
+          @click="handleSubmit"
+          :loading="loadingAtSubmit"
+          :disabled="!hardwareFormCompliance"
+          >确定</el-button
+        >
         <el-button style="margin-left: 8px" @click="closeDialog"
           >取消</el-button
         >
@@ -71,9 +82,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref, Prop } from "vue-property-decorator";
+import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { ElForm } from "element-ui/types/form";
 import { Hardware } from "@/store/types";
+import { EQUIPMENT_HARDWARE_API } from "@/store/api";
+import { AxiosResponse } from "axios";
 
 @Component
 export default class EquipmentHardware extends Vue {
@@ -83,6 +96,7 @@ export default class EquipmentHardware extends Vue {
   visible = false;
   loadingAtSubmit = false;
   loadingAtRequest = false;
+  eid: string = "";
 
   hardwareForm: Hardware = {
     cpu: "",
@@ -106,7 +120,7 @@ export default class EquipmentHardware extends Vue {
 
   confirmClose() {
     if (this.action === "add") {
-      return !Object.values(this.hardwareForm).some(ele => Boolean(ele));
+      return Object.values(this.hardwareForm).some(ele => Boolean(ele));
     } else {
       return this.hardwareFormCompliance;
     }
@@ -123,7 +137,7 @@ export default class EquipmentHardware extends Vue {
   }
 
   closeDialogCheck(done: any) {
-    if (this.confirmClose()) {
+    if (!this.confirmClose()) {
       done();
     } else {
       this.$confirm("内容已发生改变，确认关闭？")
@@ -135,12 +149,57 @@ export default class EquipmentHardware extends Vue {
   }
 
   closeDialog() {
-    this.hardwareFormIns.resetFields();
+    // this.hardwareFormIns.resetFields();
     this.visible = false;
   }
 
-  openDialog() {
+  openDialog(eid: any) {
+    if (this.action === "update") {
+      this.eid = eid;
+      this.loadingAtRequest = true;
+      this.$axios
+        .get(EQUIPMENT_HARDWARE_API + `?eid=${eid}`)
+        .then((response: AxiosResponse) => {
+          let { errcode, errmsg, data } = response.data;
+          if (errcode === 0) {
+            this.originHardwareForm = { ...data };
+            this.hardwareForm = { ...data };
+          } else {
+            this.$message.error(errmsg);
+          }
+        })
+        .finally(() => {
+          this.loadingAtRequest = false;
+        });
+    }
     this.visible = true;
+  }
+
+  handleSubmit() {
+    if (this.action === "update") {
+      this.loadingAtSubmit = true;
+      this.$axios
+        .patch(EQUIPMENT_HARDWARE_API + `?eid=${this.eid}`, this.hardwareForm)
+        .then((response: AxiosResponse) => {
+          let { errcode, errmsg } = response.data;
+          if (errcode === 0) {
+            this.$message.success("更新硬件信息成功！");
+          } else {
+            this.$message.error(errmsg);
+          }
+        })
+        .finally(() => {
+          this.loadingAtSubmit = false;
+          this.closeDialog();
+        });
+    } else {
+      this.handleAddHardware();
+    }
+  }
+
+  @Emit("setHardware")
+  handleAddHardware() {
+    return this.hardwareForm;
   }
 }
 </script>
