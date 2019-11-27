@@ -45,3 +45,13 @@ export interface AddEquipmentInterface {
   owner: string; // todo change table
   department: string;
 }
+
+export interface Hardware {
+  ip: string;
+  cpu: string;
+  gpu: string;
+  mainBoard: string;
+  memory: string;
+  disk: string;
+  remark: string;
+}

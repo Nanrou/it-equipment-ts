@@ -21,6 +21,13 @@
             :value="c.value"
           ></el-option>
         </el-select>
+        <el-button
+          v-show="action === 'add' && equipmentForm.category === '台式电脑'"
+          size="medium"
+          style="margin-left: 8px"
+          @click="handleOpenHardware"
+          >+硬件信息</el-button
+        >
       </el-form-item>
       <!-- todo hardware -->
       <transition name="el-zoom-in-top">
@@ -177,6 +184,7 @@
         </el-form-item>
       </template>
     </el-form>
+    <equipment-hardware :action="action" ref="hardware" />
   </div>
 </template>
 
@@ -186,15 +194,22 @@ import { Equipment, FormOptions, AddEquipmentInterface } from "@/store/types";
 import { CategoryOptions } from "@/store/constTypes";
 import { EQUIPMENT_ADD_API } from "@/store/api";
 import { State } from "vuex-class";
-import { StoreUser } from "@/store/types";
+import { StoreUser, Hardware } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
+import EquipmentHardware from "@/views/Equipment/EquipmentHardware.vue";
 
-@Component
+@Component({
+  components: { EquipmentHardware },
+  props: {
+    EquipmentHardware
+  }
+})
 export default class EquipmentFrom extends Vue {
   @Prop(String) action: "update" | "add";
   @Prop() originEquipmentForm?: Equipment;
   @State("user") user: StoreUser;
   @Ref("equipmentForm") equipmentFormIns: ElForm;
+  @Ref("hardware") hardwareIns: EquipmentHardware;
 
   loadingAtSubmit = false;
   initiativeClose = false;
@@ -214,6 +229,15 @@ export default class EquipmentFrom extends Vue {
     serialNumber: string;
     status: number;
     user: string;
+  })();
+  hardware: Hardware = new (class implements Hardware {
+    cpu: string;
+    disk: string;
+    gpu: string;
+    ip: string;
+    mainBoard: string;
+    memory: string;
+    remark: string;
   })();
   otherCategory: string = "";
 
@@ -340,6 +364,15 @@ export default class EquipmentFrom extends Vue {
 
   @Emit("close")
   handleClose() {}
+
+  handleOpenHardware() {
+    //@ts-ignore
+    this.hardwareIns.openDialog();
+  }
+
+  setHardware(h: Hardware) {
+    this.hardware = { ...h };
+  }
 
   get equipmentFormCompliance(): boolean {
     if (this.action === "update") {
