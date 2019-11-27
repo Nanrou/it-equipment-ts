@@ -6,6 +6,7 @@
     :before-close="closeDialogCheck"
     :visible.sync="visible"
     width="420px"
+    ref="dialogIns"
   >
     <el-form
       v-loading="loadingAtRequest"
@@ -92,6 +93,7 @@ import { AxiosResponse } from "axios";
 export default class EquipmentHardware extends Vue {
   @Prop(String) action: "update" | "add";
   @Ref("hardwareForm") hardwareFormIns: ElForm;
+  @Ref("dialogIns") dialogIns: any;
 
   visible = false;
   loadingAtSubmit = false;
@@ -149,8 +151,10 @@ export default class EquipmentHardware extends Vue {
   }
 
   closeDialog() {
-    // this.hardwareFormIns.resetFields();
+    this.hardwareFormIns.resetFields();
     this.visible = false;
+    // console.log(this.dialogIns)
+    // this.dialogIns.handleClose();
   }
 
   openDialog(eid: any) {
