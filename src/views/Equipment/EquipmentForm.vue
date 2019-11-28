@@ -155,6 +155,9 @@
             :placeholder="user.department"
           ></el-input>
           &nbsp;
+          <el-button @click="openOrganizationStructureSelect"
+            >选择部门</el-button
+          >
         </el-form-item>
       </template>
       <template v-if="action === 'add'">
@@ -196,12 +199,21 @@
       ref="hardware"
       v-on:setHardware="setHardware"
     />
+    <organization-structure-select
+      ref="organizationStructureSelect"
+      v-on:getDepartment="setDepartment"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
-import { Equipment, FormOptions, AddEquipmentInterface } from "@/store/types";
+import {
+  Equipment,
+  FormOptions,
+  AddEquipmentInterface,
+  TreeNode
+} from "@/store/types";
 import { CategoryOptions } from "@/store/constTypes";
 import { EQUIPMENT_ADD_API, EQUIPMENT_UPDATE_API } from "@/store/api";
 import { State } from "vuex-class";
@@ -209,9 +221,10 @@ import { StoreUser, Hardware } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
 import EquipmentHardware from "@/views/Equipment/EquipmentHardware.vue";
 import { AxiosResponse } from "axios";
+import OrganizationStructureSelect from "@/components/OrganizationStructureSelect.vue";
 
 @Component({
-  components: { EquipmentHardware }
+  components: { EquipmentHardware, OrganizationStructureSelect }
 })
 export default class EquipmentFrom extends Vue {
   @Prop(String) action: "update" | "add";
@@ -219,6 +232,7 @@ export default class EquipmentFrom extends Vue {
   @State("user") user: StoreUser;
   @Ref("equipmentForm") equipmentFormIns: ElForm;
   @Ref("hardware") hardwareIns: EquipmentHardware;
+  @Ref() readonly organizationStructureSelect: OrganizationStructureSelect;
 
   loadingAtSubmit = false;
   initiativeClose = false;
@@ -429,6 +443,15 @@ export default class EquipmentFrom extends Vue {
     this.hardware = { ...h };
     //@ts-ignore
     this.hardwareIns.closeDialog();
+  }
+
+  openOrganizationStructureSelect() {
+    //@ts-ignore
+    this.organizationStructureSelect.openDialog();
+  }
+
+  setDepartment(n: TreeNode) {
+    this.equipmentForm.department = n.label;
   }
 
   get equipmentFormCompliance(): boolean {

@@ -56,3 +56,9 @@ export interface Hardware {
   disk: string;
   remark: string;
 }
+
+export interface TreeNode {
+  label: string;
+  value: string;
+  children: TreeNode[];
+}

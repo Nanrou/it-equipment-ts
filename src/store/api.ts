@@ -8,4 +8,4 @@ export const EQUIPMENT_QUERY_API = "/api/equipment/query";
 export const EQUIPMENT_CHANGE_STATUS_API = "/api/equipment/changeStatus";
 export const EQUIPMENT_HARDWARE_API = "/api/equipment/hardware";
 
-export const DEPARTMENT_STRUCTURE_API = "/api/relation/query";
+export const ORGANIZATION_STRUCTURE_API = "/api/organization/query";

@@ -28,7 +28,8 @@ import {
   DatePicker,
   InputNumber,
   Switch,
-  MessageBox
+  MessageBox,
+  Tree
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -57,6 +58,7 @@ Vue.component(Option.name, Option);
 Vue.component(DatePicker.name, DatePicker);
 Vue.component(InputNumber.name, InputNumber);
 Vue.component(Switch.name, Switch);
+Vue.component(Tree.name, Tree);
 
 Vue.use(Loading.directive);
 Vue.prototype.$message = Message;
