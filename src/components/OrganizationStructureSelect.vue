@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { Vue, Component, Emit } from "vue-property-decorator";
-import { ORGANIZATION_STRUCTURE_API } from "@/store/api";
+import { ORGANIZATION_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";
 import { TreeNode } from "@/store/types";
 
@@ -40,16 +40,18 @@ import { TreeNode } from "@/store/types";
 export default class OrganizationStructureSelect extends Vue {
   visible = false;
   loading = false;
-  treeData: TreeNode = {
-    label: "",
-    value: "",
-    children: []
-  };
+  treeData: TreeNode[] = [
+    {
+      label: "",
+      value: "",
+      children: []
+    }
+  ];
 
   handleRequestOrganization() {
     this.loading = true;
     this.$axios
-      .get(ORGANIZATION_STRUCTURE_API)
+      .get(ORGANIZATION_QUERY_API)
       .then((response: AxiosResponse) => {
         let { errcode, errmsg, data } = response.data;
         if (errcode === 0) {

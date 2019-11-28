@@ -69,7 +69,11 @@ const routes = [
             meta: {
               icon: "el-icon-office-building",
               title: "department"
-            }
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/settings/department.vue"
+              )
           }
         ]
       }

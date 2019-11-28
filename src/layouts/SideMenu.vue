@@ -47,7 +47,6 @@ import { RouteConfig } from "vue-router";
 })
 export default class SideMenu extends Vue {
   menuData: RouteConfig[] = [];
-  // isCollapse = false;
 
   getMenuData(routes: RouteConfig[]) {
     const menuData: RouteConfig[] = [];

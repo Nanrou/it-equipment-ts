@@ -62,3 +62,12 @@ export interface TreeNode {
   value: string;
   children: TreeNode[];
 }
+
+export interface UpdateDepartmentLabelInterface {
+  label: string;
+}
+
+export interface AddDepartmentLabelInterface {
+  label: string;
+  parentId: string;
+}
