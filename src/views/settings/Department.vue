@@ -54,7 +54,7 @@ import {
 } from "@/store/types";
 
 @Component
-export default class department extends Vue {
+export default class Department extends Vue {
   loadingAtRequest = false;
   treeData: TreeNode[] = [
     {

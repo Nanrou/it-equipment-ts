@@ -71,3 +71,18 @@ export interface AddDepartmentLabelInterface {
   label: string;
   parentId: string;
 }
+
+export interface ChangePasswordInterface {
+  originPassword: string;
+  newPassword: string;
+}
+
+export interface UserData {
+  username: string;
+  name: string;
+  role: number;
+  department: string;
+  phone: string;
+  password?: string;
+  workNumber?: string;
+}

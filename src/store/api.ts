@@ -1,6 +1,10 @@
 export const ALIVE_API = "/api/user/alive";
 export const LOGIN_API = "/api/user/login";
 export const LOGOUT_API = "/api/user/logout";
+export const CHANGE_PASSWORD_API = "/api/user/changePassword";
+export const ADMIN_API = "/api/user/admin";
+export const CREATE_USER_API = "/api/user/create";
+export const UPDATE_USER_API = "/api/user/update";
 
 export const EQUIPMENT_ADD_API = "/api/equipment/add";
 export const EQUIPMENT_UPDATE_API = "/api/equipment/update";

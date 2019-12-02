@@ -56,12 +56,28 @@ const routes = [
         component: { render: (h: any) => h("router-view") },
         children: [
           {
+            path: "/profile",
+            name: "profile",
+            meta: {
+              icon: "el-icon-s-custom",
+              title: "person"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/settings/Profile.vue"
+              )
+          },
+          {
             path: "/admin",
             name: "admin",
             meta: {
               icon: "el-icon-user",
               title: "admin"
-            }
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/settings/Admin.vue"
+              )
           },
           {
             path: "/department",
@@ -72,7 +88,7 @@ const routes = [
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/settings/department.vue"
+                /* webpackChunkName: "settings" */ "../views/settings/Department.vue"
               )
           }
         ]
