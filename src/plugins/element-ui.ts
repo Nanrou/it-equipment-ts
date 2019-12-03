@@ -29,7 +29,10 @@ import {
   InputNumber,
   Switch,
   MessageBox,
-  Tree
+  Tree,
+  Popover,
+  Steps,
+  Step
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -59,6 +62,9 @@ Vue.component(DatePicker.name, DatePicker);
 Vue.component(InputNumber.name, InputNumber);
 Vue.component(Switch.name, Switch);
 Vue.component(Tree.name, Tree);
+Vue.component(Popover.name, Popover);
+Vue.component(Steps.name, Steps);
+Vue.component(Step.name, Step);
 
 Vue.use(Loading.directive);
 Vue.prototype.$message = Message;

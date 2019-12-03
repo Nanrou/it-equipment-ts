@@ -32,7 +32,10 @@ const routes = [
           icon: "el-icon-cpu",
           title: "维修相关"
         },
-        children: []
+        component: () =>
+          import(
+            /* webpackChunkName: "maintenance" */ "../views/Maintenance/index.vue"
+          )
       },
       {
         path: "/equipment",
@@ -57,14 +60,14 @@ const routes = [
         children: [
           {
             path: "/profile",
-            name: "profile",
+            name: "person",
             meta: {
               icon: "el-icon-s-custom",
-              title: "person"
+              title: "个人设置"
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/settings/Profile.vue"
+                /* webpackChunkName: "settings" */ "../views/Settings/Profile.vue"
               )
           },
           {
@@ -72,11 +75,11 @@ const routes = [
             name: "admin",
             meta: {
               icon: "el-icon-user",
-              title: "admin"
+              title: "用户管理"
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/settings/Admin.vue"
+                /* webpackChunkName: "settings" */ "../views/Settings/Admin.vue"
               )
           },
           {
@@ -84,11 +87,11 @@ const routes = [
             name: "department",
             meta: {
               icon: "el-icon-office-building",
-              title: "department"
+              title: "部门架构"
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/settings/Department.vue"
+                /* webpackChunkName: "settings" */ "../views/Settings/Department.vue"
               )
           }
         ]

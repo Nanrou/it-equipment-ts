@@ -86,3 +86,21 @@ export interface UserData {
   password?: string;
   workNumber?: string;
 }
+
+export interface MaintenanceOrder {
+  oid: string;
+  status: string;
+  pid: string;
+  name: string;
+  eid: string;
+  equipment: string;
+  department: string;
+  content: string;
+  reason: string;
+  rank: number;
+}
+
+export interface MaintenanceFlowType {
+  status: string;
+  content: string;
+}

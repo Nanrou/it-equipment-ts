@@ -60,7 +60,7 @@ import { Vue, Component, Ref } from "vue-property-decorator";
 import { UserData } from "@/store/types";
 import { ADMIN_API, CREATE_USER_API, UPDATE_USER_API } from "@/store/api";
 import { AxiosResponse } from "axios";
-import UserForm from "@/views/settings/UserForm.vue";
+import UserForm from "@/views/Settings/UserForm.vue";
 
 @Component({
   components: { UserForm }

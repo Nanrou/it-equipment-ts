@@ -4,6 +4,7 @@ export const LOCAL_REMEMBER = "it-remember"; // 本地用户信息的存储名�
 export const LOCAL_SETTINGS = "it-settings"; // 关于页面习惯的本地存储
 export const LOCAL_DEPARTMENT_STRUCTURE = "it-department-structure";
 export const LOCAL_EQUIPMENTS = "it-equipments";
+export const LOCAL_MAINTENANCE = "it-maintenance";
 
 // export const USER_NAMESPACE = "user";
 const USER_NAMESPACE = "user";
