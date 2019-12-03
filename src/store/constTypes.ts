@@ -24,3 +24,5 @@ export const CategoryOptions = [
   "卫星电话",
   "其他设备"
 ];
+
+export const RemoteHandleMethodOptions = ["电话解决", "远程操作", "其他"];

@@ -45,6 +45,7 @@
             v-if="scope.row.status === 'R'"
             type="text"
             style="margin-right: 8px"
+            @click="openHandleReceiveDialog(scope.row)"
             >接单</el-button
           >
           <template v-else-if="scope.row.status === 'D'">
@@ -65,6 +66,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <maintenance-handle-receive ref="handleReceive" />
   </div>
 </template>
 
@@ -75,11 +77,14 @@ import { MAINTENANCE_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";
 import { LOCAL_MAINTENANCE } from "@/store/constTypes";
 import MaintenanceFlow from "@/views/Maintenance/MaintenanceFlow.vue";
+import MaintenanceHandleReceive from "@/views/Maintenance/MaintenanceHandleReceive.vue";
 
 @Component({
-  components: { MaintenanceFlow }
+  components: { MaintenanceFlow, MaintenanceHandleReceive }
 })
 export default class MaintenanceTable extends Vue {
+  @Ref("handleReceive") handleReceiveIns: MaintenanceHandleReceive;
+
   tableLoading = false;
   tableData: MaintenanceOrder[] = [];
 
@@ -105,6 +110,10 @@ export default class MaintenanceTable extends Vue {
       .finally(() => {
         this.tableLoading = false;
       });
+  }
+
+  openHandleReceiveDialog(row: MaintenanceOrder) {
+    this.handleReceiveIns.openDialog(row.oid);
   }
 
   mounted() {

@@ -16,6 +16,9 @@ export const MAINTENANCE_QUERY_API = "/api/maintenance/query";
 export const MAINTENANCE_FLOW_API = "/api/maintenance/flow";
 export const MAINTENANCE_ADD_API = "/api/maintenance/add";
 export const MAINTENANCE_UPDATE_API = "/api/maintenance/update";
+export const MAINTENANCE_WORKER_API = "/api/maintenance/workers";
+export const MAINTENANCE_DISPATCH_API = "/api/maintenance/dispatch";
+export const MAINTENANCE_REMOTE_API = "/api/maintenance/remote";
 
 export const ORGANIZATION_QUERY_API = "/api/organization/query";
 export const ORGANIZATION_ADD_API = "/api/organization/add";

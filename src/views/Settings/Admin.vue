@@ -7,6 +7,7 @@
       stripe
       width="720px"
       @row-click="openUpdateUserForm"
+      row-key="pid"
     >
       <el-table-column label="登录账号" prop="username"></el-table-column>
       <el-table-column label="姓名" prop="name"></el-table-column>
@@ -134,7 +135,7 @@ export default class Admin extends Vue {
     if (form) {
       this.loadingAtSubmit = true;
       this.$axios
-        .patch(UPDATE_USER_API, form)
+        .patch(UPDATE_USER_API + `$pid=${form.pid}`, form)
         .then((response: AxiosResponse) => {
           let { errcode, errmsg } = response.data;
           if (errcode === 0) {

@@ -32,7 +32,9 @@ import {
   Tree,
   Popover,
   Steps,
-  Step
+  Step,
+  Tabs,
+  TabPane
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -65,6 +67,8 @@ Vue.component(Tree.name, Tree);
 Vue.component(Popover.name, Popover);
 Vue.component(Steps.name, Steps);
 Vue.component(Step.name, Step);
+Vue.component(Tabs.name, Tabs);
+Vue.component(TabPane.name, TabPane);
 
 Vue.use(Loading.directive);
 Vue.prototype.$message = Message;

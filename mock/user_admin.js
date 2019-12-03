@@ -4,6 +4,7 @@ function query() {
     errmsg: "",
     data: [
       {
+        pid: "1",
         username: "john001",
         name: "john",
         role: 1,
@@ -12,6 +13,7 @@ function query() {
         workNumber: "001"
       },
       {
+        pid: "2",
         username: "mike002",
         name: "mike",
         role: 3,
@@ -20,6 +22,7 @@ function query() {
         workNumber: "002"
       },
       {
+        pid: "3",
         username: "lion003",
         name: "lion",
         role: 7,

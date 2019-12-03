@@ -78,6 +78,7 @@ export interface ChangePasswordInterface {
 }
 
 export interface UserData {
+  pid?: string;
   username: string;
   name: string;
   role: number;
@@ -103,4 +104,9 @@ export interface MaintenanceOrder {
 export interface MaintenanceFlowType {
   status: string;
   content: string;
+}
+
+export interface MaintenanceWorker {
+  pid: string;
+  name: string;
 }
