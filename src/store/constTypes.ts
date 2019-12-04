@@ -26,3 +26,12 @@ export const CategoryOptions = [
 ];
 
 export const RemoteHandleMethodOptions = ["电话解决", "远程操作", "其他"];
+
+export const MaintenanceStatusOptions = [
+  { label: "待接单", value: "R" },
+  { label: "已指派", value: "D" },
+  { label: "处理中", value: "H" },
+  { label: "待评价", value: "E" },
+  { label: "已完结", value: "F" },
+  { label: "已取消", value: "C" }
+];

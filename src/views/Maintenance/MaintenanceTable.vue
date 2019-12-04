@@ -7,7 +7,11 @@
       row-key="oid"
       style="max-width: 800px"
     >
-      <el-table-column type="index" width="40"></el-table-column>
+      <el-table-column
+        type="index"
+        width="40"
+        :index="indexMethod"
+      ></el-table-column>
       <el-table-column label="工单编号" prop="oid" width="120">
       </el-table-column>
       <el-table-column label="设备分类" prop="equipment" width="110">
@@ -23,7 +27,7 @@
             <el-tag disable-transitions type="">已指派</el-tag>
           </template>
           <template v-else-if="scope.row.status === 'H'">
-            <el-tag disable-transitions color="#0ee0ff">正在处理</el-tag>
+            <el-tag disable-transitions color="#0ee0ff">处理中</el-tag>
           </template>
           <template v-else-if="scope.row.status === 'E'">
             <el-tag disable-transitions color="#14c010" style="color: #fff"
@@ -67,11 +71,12 @@
       </el-table-column>
     </el-table>
     <maintenance-handle-receive ref="handleReceive" />
+    <!-- todo 分页-->
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from "vue-property-decorator";
+import { Vue, Component, Ref, Prop } from "vue-property-decorator";
 import { MaintenanceOrder } from "@/store/types";
 import { MAINTENANCE_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";
@@ -84,41 +89,26 @@ import MaintenanceHandleReceive from "@/views/Maintenance/MaintenanceHandleRecei
 })
 export default class MaintenanceTable extends Vue {
   @Ref("handleReceive") handleReceiveIns: MaintenanceHandleReceive;
+  @Prop() currentPage: number;
+  @Prop() pageSize: number;
+  @Prop() tableData: MaintenanceOrder[];
+  @Prop() tableLoading: boolean;
 
-  tableLoading = false;
-  tableData: MaintenanceOrder[] = [];
-
-  requestData(page: number = -1) {
-    this.tableLoading = true;
-    this.$axios
-      .get(MAINTENANCE_QUERY_API + (page > 0 ? `page=${page.toString()}` : ""))
-      .then((response: AxiosResponse) => {
-        let { errcode, errmsg, data } = response.data;
-        if (errcode === 0) {
-          this.tableData = data;
-          window.localStorage.setItem(LOCAL_MAINTENANCE, JSON.stringify(data));
-        } else {
-          this.$message.error(errmsg);
-        }
-      })
-      .catch(() => {
-        // todo pagination 分页
-        this.tableData = JSON.parse(
-          window.localStorage.getItem(LOCAL_MAINTENANCE) || "[]"
-        );
-      })
-      .finally(() => {
-        this.tableLoading = false;
-      });
-  }
+  // tableLoading = false;
+  // tableData: MaintenanceOrder[] = [];
 
   openHandleReceiveDialog(row: MaintenanceOrder) {
+    //@ts-ignore
     this.handleReceiveIns.openDialog(row.oid);
   }
 
-  mounted() {
-    this.requestData();
+  indexMethod(index: number) {
+    return index + (this.currentPage - 1) * this.pageSize + 1;
   }
+
+  // mounted() {
+  //   this.requestData();
+  // }
 }
 </script>
 

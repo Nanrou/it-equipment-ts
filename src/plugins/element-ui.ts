@@ -34,7 +34,8 @@ import {
   Steps,
   Step,
   Tabs,
-  TabPane
+  TabPane,
+  Pagination
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -69,6 +70,7 @@ Vue.component(Steps.name, Steps);
 Vue.component(Step.name, Step);
 Vue.component(Tabs.name, Tabs);
 Vue.component(TabPane.name, TabPane);
+Vue.component(Pagination.name, Pagination);
 
 Vue.use(Loading.directive);
 Vue.prototype.$message = Message;
