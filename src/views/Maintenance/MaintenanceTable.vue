@@ -78,9 +78,6 @@
 <script lang="ts">
 import { Vue, Component, Ref, Prop } from "vue-property-decorator";
 import { MaintenanceOrder } from "@/store/types";
-import { MAINTENANCE_QUERY_API } from "@/store/api";
-import { AxiosResponse } from "axios";
-import { LOCAL_MAINTENANCE } from "@/store/constTypes";
 import MaintenanceFlow from "@/views/Maintenance/MaintenanceFlow.vue";
 import MaintenanceHandleReceive from "@/views/Maintenance/MaintenanceHandleReceive.vue";
 
@@ -94,9 +91,6 @@ export default class MaintenanceTable extends Vue {
   @Prop() tableData: MaintenanceOrder[];
   @Prop() tableLoading: boolean;
 
-  // tableLoading = false;
-  // tableData: MaintenanceOrder[] = [];
-
   openHandleReceiveDialog(row: MaintenanceOrder) {
     //@ts-ignore
     this.handleReceiveIns.openDialog(row.oid);
@@ -105,10 +99,6 @@ export default class MaintenanceTable extends Vue {
   indexMethod(index: number) {
     return index + (this.currentPage - 1) * this.pageSize + 1;
   }
-
-  // mounted() {
-  //   this.requestData();
-  // }
 }
 </script>
 

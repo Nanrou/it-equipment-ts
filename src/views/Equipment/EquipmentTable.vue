@@ -7,7 +7,11 @@
       row-key="eid"
       @row-click="openDetail"
     >
-      <el-table-column type="index"></el-table-column>
+      <el-table-column
+        type="index"
+        :index="indexMethod"
+        width="40"
+      ></el-table-column>
       <el-table-column label="设备分类" prop="category"></el-table-column>
       <el-table-column label="品牌厂家" prop="brand">
         <template slot-scope="scope">
@@ -82,11 +86,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from "vue-property-decorator";
-import { EQUIPMENT_QUERY_API } from "@/store/api";
-import { LOCAL_EQUIPMENTS } from "@/store/constTypes";
+import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { Equipment } from "@/store/types";
-import { AxiosResponse } from "axios";
 import EquipmentDetail from "@/views/Equipment/EquipmentDetail.vue";
 import EquipmentDrawer from "@/views/Equipment/EquipmentDrawer.vue";
 import EquipmentStatus from "@/views/Equipment/EquipmentStatus.vue";
@@ -99,36 +100,14 @@ import EquipmentStatus from "@/views/Equipment/EquipmentStatus.vue";
   }
 })
 export default class EquipmentTable extends Vue {
+  @Prop() currentPage: number;
+  @Prop() pageSize: number;
+  @Prop() tableData: Equipment[];
+  @Prop() tableLoading: boolean;
+
   @Ref() readonly equipmentDetail: EquipmentDetail;
   @Ref() readonly equipmentDrawer: EquipmentDrawer;
   @Ref() readonly equipmentStatus: EquipmentStatus;
-
-  tableLoading = false;
-  tableData: Equipment[] = [];
-
-  requestData(page: number = -1) {
-    this.tableLoading = true;
-    this.$axios
-      .get(EQUIPMENT_QUERY_API + (page > 0 ? `page=${page.toString()}` : ""))
-      .then((response: AxiosResponse) => {
-        let { errcode, errmsg, data } = response.data;
-        if (errcode === 0) {
-          this.tableData = data;
-          window.localStorage.setItem(LOCAL_EQUIPMENTS, JSON.stringify(data));
-        } else {
-          this.$message.error(errmsg);
-        }
-      })
-      .catch(() => {
-        // todo pagination 分页
-        this.tableData = JSON.parse(
-          window.localStorage.getItem(LOCAL_EQUIPMENTS) || "[]"
-        );
-      })
-      .finally(() => {
-        this.tableLoading = false;
-      });
-  }
 
   editEquipment(equipment: Equipment) {
     //@ts-ignore todo rm
@@ -151,9 +130,12 @@ export default class EquipmentTable extends Vue {
     );
   }
 
-  mounted() {
-    this.requestData();
+  indexMethod(index: number) {
+    return index + (this.currentPage - 1) * this.pageSize + 1;
   }
+
+  @Emit("requestData")
+  requestData() {}
 }
 </script>
 

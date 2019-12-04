@@ -1,11 +1,12 @@
 <template>
   <div>
     <el-container>
-      <el-header>
+      <el-header height="100px">
         <table-filter-form
           :tableType="'maintenance'"
           v-on:getFilterParam="getFilterParam"
           v-on:handleFilterRequest="handleFilterRequest"
+          style="margin-top: 8px"
         />
       </el-header>
       <el-main>
