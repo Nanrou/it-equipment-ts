@@ -11,6 +11,7 @@ export const EQUIPMENT_UPDATE_API = "/api/equipment/update";
 export const EQUIPMENT_QUERY_API = "/api/equipment/query";
 export const EQUIPMENT_CHANGE_STATUS_API = "/api/equipment/changeStatus";
 export const EQUIPMENT_HARDWARE_API = "/api/equipment/hardware";
+export const EQUIPMENT_FILTER_OPTIONS_API = "/api/equipment/options";
 
 export const MAINTENANCE_QUERY_API = "/api/maintenance/query";
 export const MAINTENANCE_FLOW_API = "/api/maintenance/flow";

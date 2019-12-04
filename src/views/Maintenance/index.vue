@@ -1,63 +1,12 @@
 <template>
   <div>
     <el-container>
-      <el-header v-loading="loadingAtRequestOptions">
-        <el-form inline ref="filterForm">
-          <el-form-item>
-            <el-select
-              :value="filterForm.department"
-              v-model="filterForm.department"
-              multiple
-              placeholder="请选择所属部门"
-            >
-              <el-option
-                v-for="item in departmentOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select
-              :value="filterForm.equipment"
-              v-model="filterForm.equipment"
-              multiple
-              placeholder="请选择设备分类"
-            >
-              <el-option
-                v-for="item in equipmentOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select
-              :value="filterForm.status"
-              v-model="filterForm.status"
-              multiple
-              placeholder="请选择工单状态"
-            >
-              <el-option
-                v-for="item in statusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              :disabled="!filterEnable"
-              @click="handleFilterRequest"
-              >查询</el-button
-            >
-            <el-button @click="resetFilterForm">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <el-header>
+        <table-filter-form
+          :tableType="'maintenance'"
+          v-on:getFilterParam="getFilterParam"
+          v-on:handleFilterRequest="handleFilterRequest"
+        />
       </el-header>
       <el-main>
         <maintenance-table
@@ -83,31 +32,17 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import MaintenanceTable from "@/views/Maintenance/MaintenanceTable.vue";
-import { FormOptions, MaintenanceOrder } from "@/store/types";
-import { MaintenanceStatusOptions } from "@/store/constTypes";
-import {
-  MAINTENANCE_FILTER_OPTIONS_API,
-  MAINTENANCE_QUERY_API
-} from "@/store/api";
+import { MaintenanceOrder } from "@/store/types";
+import { MAINTENANCE_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";
 // import { ElForm } from "element-ui/types/form";
+import TableFilterForm from "@/components/TableFilterForm.vue";
 
 @Component({
-  components: { MaintenanceTable }
+  components: { TableFilterForm, MaintenanceTable }
 })
 export default class MaintenanceIndex extends Vue {
   // @Ref("filterForm") filterFormIns: ElForm; // 默认值为array，resetFields无效
-
-  loadingAtRequestOptions = false;
-  filterForm = {
-    department: [],
-    equipment: [],
-    status: []
-  };
-
-  departmentOptions: FormOptions[] = [];
-  equipmentOptions: FormOptions[] = [];
-  statusOptions = MaintenanceStatusOptions;
 
   pageSize = 10;
   currentPage = 1;
@@ -115,24 +50,7 @@ export default class MaintenanceIndex extends Vue {
 
   tableData: MaintenanceOrder[] = [];
   tableLoading = false;
-
-  requestOptions() {
-    this.loadingAtRequestOptions = true;
-    this.$axios
-      .get(MAINTENANCE_FILTER_OPTIONS_API)
-      .then((response: AxiosResponse) => {
-        let { errcode, errmsg, data } = response.data;
-        if (errcode === 0) {
-          this.departmentOptions = data.department;
-          this.equipmentOptions = data.equipment;
-        } else {
-          this.$message.error(errmsg);
-        }
-      })
-      .finally(() => {
-        this.loadingAtRequestOptions = false;
-      });
-  }
+  filterParam = "";
 
   // 把table内容给到组件，翻页在父节点做
   handleChangePage() {
@@ -141,17 +59,11 @@ export default class MaintenanceIndex extends Vue {
 
   requestData() {
     this.tableLoading = true;
-    let _url = MAINTENANCE_QUERY_API + `?page=${this.currentPage.toString()}`;
     // 手动拼接url
-    if (this.filterEnable) {
-      for (let key in this.filterForm) {
-        //@ts-ignore
-        if (this.filterForm[key].length > 0) {
-          //@ts-ignore
-          _url += `&${key}=${this.filterForm[key].join(",")}`;
-        }
-      }
-    }
+    let _url =
+      MAINTENANCE_QUERY_API +
+      `?page=${this.currentPage.toString()}` +
+      this.filterParam;
     this.$axios
       .get(_url)
       .then((response: AxiosResponse) => {
@@ -159,7 +71,7 @@ export default class MaintenanceIndex extends Vue {
         if (errcode === 0) {
           this.tableData = data.tableData;
           if (data.totalPage) {
-            // 当缓存版本不变时，总页数不会变。这是在服务端判断的
+            // 当缓存版本不变时，总页数不会变。这是在服务端判断的  过滤条件发生改变？
             this.totalPage = data.totalPage;
           }
         } else {
@@ -177,22 +89,11 @@ export default class MaintenanceIndex extends Vue {
     this.requestData();
   }
 
-  resetFilterForm() {
-    this.filterForm = {
-      department: [],
-      equipment: [],
-      status: []
-    };
-    this.handleFilterRequest();
-  }
-
-  get filterEnable(): boolean {
-    // 有过滤项为true
-    return Object.values(this.filterForm).some(ele => ele.length > 0);
+  getFilterParam(param: string) {
+    this.filterParam = param;
   }
 
   mounted() {
-    this.requestOptions();
     this.requestData();
   }
 }
