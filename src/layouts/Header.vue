@@ -20,7 +20,7 @@
             type="text"
             style="margin-right: 12px; color: gray"
           >
-            <svg class="icon" @click="logout">
+            <svg class="icon">
               <use xlink:href="#icon-log-out" />
             </svg>
           </el-button>
@@ -39,18 +39,21 @@
 <script lang="ts">
 require("../assets/iconfont/log-out");
 import { Vue, Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
+import { State, Mutation } from "vuex-class";
 import { SET_LOGOUT } from "@/store/constTypes";
 import { StoreUser } from "@/store/types";
+import { AxiosResponse } from "axios";
+import { LOGOUT_API } from "@/store/api";
 
 import moment from "moment";
 import { Moment } from "moment";
 
-const userStore = namespace("@/store/modules/user");
+// const userStore = namespace("user");
 
 @Component
 export default class Header extends Vue {
-  @userStore.Mutation(SET_LOGOUT) setLogout: any;
+  // @userStore.Mutation("user/setLogout") setLogout: any;
+  @Mutation(SET_LOGOUT) setLogout: any; // SET_LOGOUT 是 user/setLogout
   @State("user") user: StoreUser;
 
   inputValue = "";
@@ -60,10 +63,20 @@ export default class Header extends Vue {
 
   logout(): void {
     this.loading = true;
-    // todo fix
-    // this.setLogout();
-    console.log("log out");
-    this.loading = false;
+    this.$axios
+      .get(LOGOUT_API)
+      .then((response: AxiosResponse) => {
+        let { errcode, errmsg } = response.data;
+        if (errcode === 0) {
+          this.$message.success("登出成功！");
+          this.setLogout();
+        } else {
+          this.$message.error(errmsg);
+        }
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   mounted(): void {

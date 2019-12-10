@@ -10,6 +10,7 @@ export const LOCAL_MAINTENANCE = "it-maintenance";
 const USER_NAMESPACE = "user";
 export const SET_LOGIN = `${USER_NAMESPACE}/setLogin`;
 export const SET_LOGOUT = `${USER_NAMESPACE}/setLogout`;
+// export const SET_LOGOUT = `setLogout`;
 
 // Some options
 export const CategoryOptions = [

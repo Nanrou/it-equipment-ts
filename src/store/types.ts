@@ -110,3 +110,42 @@ export interface MaintenanceWorker {
   pid: string;
   name: string;
 }
+
+export class BubbleItem {
+  index: number;
+  x: number;
+  y: number;
+  r: number;
+  color: string;
+  canvas: CanvasRenderingContext2D;
+  constructor(
+    canvas: CanvasRenderingContext2D,
+    index: number,
+    x: number,
+    y: number
+  ) {
+    this.index = index;
+    this.x = x;
+    this.y = y;
+    this.canvas = canvas;
+    this.r = Math.random() * 30;
+    this.color = `rgba(255, 255, 255, ${(Math.floor(Math.random() * 10) + 1) /
+      10 /
+      2})`;
+  }
+  draw() {
+    this.canvas.fillStyle = this.color;
+    this.canvas.shadowBlur = this.r * 2;
+    this.canvas.beginPath();
+    this.canvas.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+    this.canvas.closePath();
+    this.canvas.fill();
+  }
+  move(h: number) {
+    this.y -= 0.5;
+    if (this.y <= -10) {
+      this.y = h + 10;
+    }
+    this.draw();
+  }
+}
