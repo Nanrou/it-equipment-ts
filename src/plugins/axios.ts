@@ -33,6 +33,13 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   function(response) {
     // Do something with response data
+    if (response.headers.hasOwnProperty("jwt-new-token")) {
+      window.localStorage.setItem(
+        "it-token",
+        response.headers["jwt-new-token"]
+      );
+    }
+
     return response;
   },
   function(error) {

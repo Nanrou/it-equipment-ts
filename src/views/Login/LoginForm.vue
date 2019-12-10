@@ -57,7 +57,7 @@ import { Vue, Component, Ref } from "vue-property-decorator";
 import { ElForm } from "element-ui/types/form";
 import { AxiosResponse } from "axios";
 import { LOGIN_API } from "@/store/api";
-import { LOCAL_REMEMBER, SET_LOGIN } from "@/store/constTypes";
+import { LOCAL_REMEMBER, SET_LOGIN, LOCAL_TOKEN } from "@/store/constTypes";
 import { Mutation } from "vuex-class";
 
 @Component
@@ -91,7 +91,8 @@ export default class LoginForm extends Vue {
           .then((response: AxiosResponse) => {
             let { errcode, errmsg, data } = response.data;
             if (errcode === 0) {
-              this.setLogin(data);
+              window.localStorage.setItem(LOCAL_TOKEN, data["token"]);
+              this.setLogin(data["user"]);
               this.$message.success("登录成功！");
               this.$router.push("/");
             } else {
@@ -108,7 +109,6 @@ export default class LoginForm extends Vue {
                 JSON.stringify(this.rememberUser)
               );
             }
-
             this.loadingAtSubmit = false;
           });
       } else {
@@ -135,9 +135,9 @@ export default class LoginForm extends Vue {
   }
 
   mounted() {
-    let _form = JSON.parse(window.localStorage.getItem(LOCAL_REMEMBER) || "");
+    let _form = window.localStorage.getItem(LOCAL_REMEMBER) || false;
     if (_form) {
-      this.rememberUser = { ..._form };
+      this.rememberUser = { ...JSON.parse(_form) };
       if (this.rememberUser.checkbox) {
         this.loginForm.username = this.rememberUser.username;
       }
