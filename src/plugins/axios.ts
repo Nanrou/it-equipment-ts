@@ -46,6 +46,7 @@ _axios.interceptors.response.use(
     // Do something with response error
     const code = error.response.status; // some trick
     if (code === 401) {
+      // todo logout
       // store.commit("setLogout");
     } else if (code === 304) {
       return Promise.reject(error);

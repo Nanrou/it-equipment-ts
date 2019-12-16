@@ -4,7 +4,7 @@
       <el-header height="120px">
         <el-button type="primary" @click="openDialog">新增设备</el-button>
         <table-filter-form
-          :tableType="'maintenance'"
+          :tableType="'equipment'"
           v-on:getFilterParam="getFilterParam"
           v-on:handleFilterRequest="handleFilterRequest"
           class="filter-form"

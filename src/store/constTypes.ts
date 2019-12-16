@@ -36,3 +36,10 @@ export const MaintenanceStatusOptions = [
   { label: "已完结", value: "F" },
   { label: "已取消", value: "C" }
 ];
+
+export const EquipmentStatusOptions = [
+  { label: "正常", value: 0 },
+  { label: "维修", value: 1 },
+  { label: "备用", value: 2 },
+  { label: "报废", value: 3 }
+];

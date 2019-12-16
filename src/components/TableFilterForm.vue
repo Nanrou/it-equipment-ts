@@ -60,7 +60,10 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 import { FormOptions } from "@/store/types";
-import { MaintenanceStatusOptions } from "@/store/constTypes";
+import {
+  MaintenanceStatusOptions,
+  EquipmentStatusOptions
+} from "@/store/constTypes";
 import {
   MAINTENANCE_FILTER_OPTIONS_API,
   EQUIPMENT_FILTER_OPTIONS_API
@@ -80,7 +83,7 @@ export default class TableFilterForm extends Vue {
 
   departmentOptions: FormOptions[] = [];
   equipmentOptions: FormOptions[] = [];
-  statusOptions = MaintenanceStatusOptions;
+  // statusOptions = MaintenanceStatusOptions;
 
   requestOptions() {
     this.loadingAtRequestOptions = true;
@@ -121,6 +124,12 @@ export default class TableFilterForm extends Vue {
   get filterEnable(): boolean {
     // 有过滤项为true
     return Object.values(this.filterForm).some(ele => ele.length > 0);
+  }
+
+  get statusOptions() {
+    return this.tableType === "equipment"
+      ? EquipmentStatusOptions
+      : MaintenanceStatusOptions;
   }
 
   @Emit("getFilterParam")

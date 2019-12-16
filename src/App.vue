@@ -25,6 +25,7 @@ export default class App extends Vue {
           this.$router.push("/");
         } else {
           this.$message.error(errmsg);
+          this.$router.push("login");
         }
       });
     } else {
