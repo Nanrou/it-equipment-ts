@@ -3,7 +3,7 @@
     <el-menu
       :collapse="isCollapse"
       :unique-opened="true"
-      :default-active="$router.currentRoute.path"
+      :default-active="currentPath"
       background-color="#1c2327"
       text-color="#fff"
       active-text-color="#ffd04b"
@@ -69,6 +69,10 @@ export default class SideMenu extends Vue {
       }
     }
     return menuData;
+  }
+
+  get currentPath() {
+    return this.$route.path;
   }
 
   mounted() {
