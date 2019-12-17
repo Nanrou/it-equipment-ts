@@ -56,6 +56,41 @@ const routes = [
           )
       },
       {
+        path: "/chart",
+        name: "chart",
+        meta: {
+          icon: "el-icon-pie-chart",
+          title: "报表相关"
+        },
+        component: { render: (h: any) => h("router-view") },
+        children: [
+          {
+            path: "/equipment-chart",
+            name: "equipment-chart",
+            meta: {
+              icon: "el-icon-data-line",
+              title: "设备统计"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/Chart/EquipmentChart.vue"
+              )
+          },
+          {
+            path: "/department-chart",
+            name: "department-chart",
+            meta: {
+              icon: "el-icon-data-analysis",
+              title: "部门统计"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/Chart/DepartmentChart.vue"
+              )
+          }
+        ]
+      },
+      {
         path: "/settings",
         name: "settings",
         meta: {
