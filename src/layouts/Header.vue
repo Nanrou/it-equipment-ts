@@ -26,7 +26,7 @@
           </el-button>
         </el-tooltip>
       </el-col>
-      <el-col :span="4" :offset="1">
+      <el-col :span="5">
         <div style="text-align: right; padding-left: 16px; font-size: 14px">
           <p>{{ timeText.format("LL") }}</p>
           <p>{{ timeText.format("HH:mm:ss") }} {{ timeText.format("dddd") }}</p>
@@ -95,7 +95,7 @@ export default class Header extends Vue {
 <style scoped>
 .header-style {
   float: right;
-  width: 780px;
+  width: 80%;
 }
 
 p {

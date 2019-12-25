@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-header height="120px">
+      <el-header height="auto">
         <el-button type="primary" @click="openDialog">新增设备</el-button>
         <table-filter-form
           :tableType="'equipment'"

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
+import store from "../store";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -45,13 +46,16 @@ _axios.interceptors.response.use(
   function(error) {
     // Do something with response error
     const code = error.response.status; // some trick
+    console.log(error.response);
     if (code === 401) {
-      // todo logout
-      // store.commit("setLogout");
+      Vue.prototype.$message.error(error.response.data.errmsg);
+      console.log(error.response.data.errmsg);
+      store.commit("setLogout");
     } else if (code === 304) {
       return Promise.reject(error);
+    } else {
+      Vue.prototype.$message.error("通信失败，请联系管理员");
     }
-    //Vue.prototype.$message.error("通信失败，请检查网络");
     // return Promise.reject(error);
   }
 );

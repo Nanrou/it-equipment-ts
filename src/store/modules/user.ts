@@ -3,11 +3,9 @@ import { SET_LOGIN, SET_LOGOUT, LOCAL_TOKEN } from "../constTypes";
 
 const state = {
   isLogin: false, // 登陆状态
-  // name: "", // 真名
-  name: "abc", // 真名
+  name: "", // 真名
   role: -1, // 角色
-  // department: "", // 所属部门
-  department: "where", // 所属部门
+  department: "", // 所属部门
   isGlobal: false, //部门是否属于global
   phone: "" // 电话
 };
