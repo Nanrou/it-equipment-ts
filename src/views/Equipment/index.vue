@@ -94,6 +94,7 @@ export default class EquipmentIndex extends Vue {
 
   closeDialog() {
     this.visible = false;
+    this.requestData();
   }
 
   requestData() {

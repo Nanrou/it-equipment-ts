@@ -81,6 +81,8 @@ export default class EquipmentDetail extends Vue {
           let { errcode, errmsg, data } = response.data;
           if (errcode === 0) {
             this.hardware = { ...data };
+          } else if (errcode === 100006) {
+            this.$message.warning(errmsg);
           } else {
             this.$message.error(errmsg);
           }

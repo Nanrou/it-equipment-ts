@@ -80,7 +80,7 @@
       </el-table-column>
     </el-table>
     <equipment-detail ref="equipmentDetail" />
-    <equipment-drawer ref="equipmentDrawer" />
+    <equipment-drawer ref="equipmentDrawer" v-on:requestData="requestData" />
     <equipment-status ref="equipmentStatus" />
   </div>
 </template>

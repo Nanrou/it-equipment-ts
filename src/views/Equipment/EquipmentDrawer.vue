@@ -6,6 +6,7 @@
     :destroy-on-close="true"
   >
     <equipment-form
+      v-if="showForm"
       ref="equipmentFormComponent"
       :action="'update'"
       :origin-equipment-form="equipmentForm"
@@ -15,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from "vue-property-decorator";
+import { Vue, Component, Ref, Emit } from "vue-property-decorator";
 import { Equipment } from "@/store/types";
 import EquipmentForm from "@/views/Equipment/EquipmentForm.vue";
 
@@ -27,9 +28,11 @@ export default class EquipmentDrawer extends Vue {
 
   visible = false;
   equipmentForm: Equipment | {} = {};
+  showForm = false; // 还是子组件未销毁，导致更新后不更新
 
   openDrawer(e: Equipment) {
     this.equipmentForm = e;
+    this.showForm = true;
     this.visible = true;
   }
 
@@ -47,8 +50,13 @@ export default class EquipmentDrawer extends Vue {
   }
 
   closeDrawer() {
+    this.showForm = false;
     this.visible = false;
+    this.requestData();
   }
+
+  @Emit("requestData")
+  requestData() {}
 }
 </script>
 

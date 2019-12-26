@@ -48,6 +48,7 @@ export interface AddEquipmentInterface {
 }
 
 export interface Hardware {
+  hid?: string;
   ip: string;
   cpu: string;
   gpu: string;

@@ -99,16 +99,17 @@ export default class EquipmentHardware extends Vue {
   loadingAtSubmit = false;
   loadingAtRequest = false;
   eid: string = "";
+  loadHardware = false; // 当前设备是否已有硬件信息
 
-  hardwareForm: Hardware = {
-    cpu: "",
-    disk: "",
-    gpu: "",
-    ip: "",
-    mainBoard: "",
-    memory: "",
-    remark: ""
-  };
+  hardwareForm: Hardware = new (class implements Hardware {
+    cpu: string;
+    disk: string;
+    gpu: string;
+    ip: string;
+    mainBoard: string;
+    memory: string;
+    remark: string;
+  })();
 
   originHardwareForm: Hardware = new (class implements Hardware {
     cpu: string;
@@ -168,6 +169,9 @@ export default class EquipmentHardware extends Vue {
           if (errcode === 0) {
             this.originHardwareForm = { ...data };
             this.hardwareForm = { ...data };
+            this.loadHardware = true;
+          } else if (errcode === 100006) {
+            this.$message.warning(errmsg);
           } else {
             this.$message.error(errmsg);
           }
@@ -181,21 +185,51 @@ export default class EquipmentHardware extends Vue {
 
   handleSubmit() {
     if (this.action === "update") {
-      this.loadingAtSubmit = true;
-      this.$axios
-        .patch(EQUIPMENT_HARDWARE_API + `?eid=${this.eid}`, this.hardwareForm)
-        .then((response: AxiosResponse) => {
-          let { errcode, errmsg } = response.data;
-          if (errcode === 0) {
-            this.$message.success("更新硬件信息成功！");
-          } else {
-            this.$message.error(errmsg);
+      if (this.loadHardware) {
+        this.loadingAtSubmit = true;
+        let _hardwareForm = this.hardwareForm;
+        let _originHardwareForm = this.originHardwareForm;
+        let _res = {};
+        Object.keys(_hardwareForm).map(k => {
+          //@ts-ignore
+          if (_hardwareForm[k] !== _originHardwareForm[k]) {
+            //@ts-ignore
+            _res[k] = [_hardwareForm[k], _originHardwareForm[k]]; // data: {key: [new, old]}
           }
-        })
-        .finally(() => {
-          this.loadingAtSubmit = false;
-          this.closeDialog();
         });
+        this.$axios
+          .patch(EQUIPMENT_HARDWARE_API + `?eid=${this.eid}`, _res)
+          .then((response: AxiosResponse) => {
+            let { errcode, errmsg } = response.data;
+            if (errcode === 0) {
+              this.$message.success("更新硬件信息成功！");
+            } else {
+              this.$message.error(errmsg);
+            }
+          })
+          .finally(() => {
+            this.loadingAtSubmit = false;
+            this.closeDialog();
+          });
+      } else {
+        this.loadingAtSubmit = true;
+        this.$axios
+          .post(EQUIPMENT_HARDWARE_API + `?eid=${this.eid}`, this.hardwareForm)
+          .then((response: AxiosResponse) => {
+            let { errcode, errmsg } = response.data;
+            if (errcode === 0) {
+              this.$message.success("更新硬件信息成功！");
+            } else if (errcode === 100008) {
+              this.$message.warning(errmsg);
+            } else {
+              this.$message.error(errmsg);
+            }
+          })
+          .finally(() => {
+            this.loadingAtSubmit = false;
+            this.closeDialog();
+          });
+      }
     } else {
       this.handleAddHardware();
     }

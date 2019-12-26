@@ -21,13 +21,25 @@
             :value="c.value"
           ></el-option>
         </el-select>
-        <el-button
-          v-show="action === 'add' && equipmentForm.category === '台式电脑'"
-          size="medium"
-          style="margin-left: 8px"
-          @click="handleOpenHardware"
-          >+硬件信息</el-button
-        >
+        <template v-if="equipmentForm.category === '台式电脑'">
+          <template v-if="action === 'add'">
+            <el-button
+              size="medium"
+              style="margin-left: 8px"
+              @click="handleOpenHardware"
+              >+硬件信息</el-button
+            >
+          </template>
+          <template v-else>
+            <el-tooltip content="更新硬件信息">
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="handleOpenHardware"
+              />
+            </el-tooltip>
+          </template>
+        </template>
       </el-form-item>
       <!-- todo hardware -->
       <transition name="el-zoom-in-top">
@@ -184,13 +196,6 @@
             >更新</el-button
           >
           <el-button @click="handleClose">取消</el-button>
-          <el-tooltip content="更新硬件信息">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleOpenHardware"
-            />
-          </el-tooltip>
         </el-form-item>
       </template>
     </el-form>
@@ -274,12 +279,6 @@ export default class EquipmentFrom extends Vue {
       { required: true, message: "必须选择设备分类", trigger: "blur" }
     ],
     brand: [{ required: true, message: "必须填写品牌厂家", trigger: "blur" }],
-    modelNumber: [
-      { required: true, message: "必须填写品牌型号", trigger: "blur" }
-    ],
-    serialNumber: [
-      { required: true, message: "必须填写设备序列号", trigger: "blur" }
-    ],
     purchasingTime: [
       { required: true, message: "必须填写购买时间", trigger: "blur" }
     ]
@@ -382,7 +381,7 @@ export default class EquipmentFrom extends Vue {
             //@ts-ignore
             if (_equipment[k] !== _originEquipment[k]) {
               //@ts-ignore
-              _res[k] = _equipment[k];
+              _res[k] = [_equipment[k], _originEquipment[k]]; // data: {key: [new, old]}
             }
           });
           this.$axios
