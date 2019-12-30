@@ -76,6 +76,7 @@
               :disabled="true"
             ></el-button>
           </el-tooltip>
+          <qr-code :eid="scope.row.eid" />
         </template>
       </el-table-column>
     </el-table>
@@ -91,12 +92,14 @@ import { Equipment } from "@/store/types";
 import EquipmentDetail from "@/views/Equipment/EquipmentDetail.vue";
 import EquipmentDrawer from "@/views/Equipment/EquipmentDrawer.vue";
 import EquipmentStatus from "@/views/Equipment/EquipmentStatus.vue";
+import QrCode from "@/components/QrCode.vue";
 
 @Component({
   components: {
     EquipmentStatus,
     EquipmentDrawer,
-    EquipmentDetail
+    EquipmentDetail,
+    QrCode
   }
 })
 export default class EquipmentTable extends Vue {
