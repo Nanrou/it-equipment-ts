@@ -76,13 +76,13 @@
               :disabled="true"
             ></el-button>
           </el-tooltip>
-          <qr-code :eid="scope.row.eid" />
+          <qr-code :eid="scope.row.eid" style="margin-left: 8px" />
         </template>
       </el-table-column>
     </el-table>
     <equipment-detail ref="equipmentDetail" />
     <equipment-drawer ref="equipmentDrawer" v-on:requestData="requestData" />
-    <equipment-status ref="equipmentStatus" />
+    <equipment-status ref="equipmentStatus" v-on:requestData="requestData" />
   </div>
 </template>
 

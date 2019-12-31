@@ -1,79 +1,93 @@
 <template>
-  <el-dialog
-    title="修改状态"
-    :visible.sync="visible"
-    :destroy-on-close="true"
-    :before-close="closeDialogCheck"
-    width="380px"
-  >
-    <el-select
-      placeholder="请选择"
-      :value="statusForm.status"
-      v-model="statusForm.status"
+  <div>
+    <el-dialog
+      title="修改状态"
+      :visible.sync="visible"
+      :destroy-on-close="true"
+      :before-close="closeDialogCheck"
+      width="380px"
     >
-      <el-option
-        v-for="item in statusOptions"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-        :disabled="item.value === originStatus"
-      ></el-option>
-    </el-select>
-    <template v-if="!equipmentFormCompliance">
-      <template v-if="statusForm.status === 0">
-        <el-form
-          :model="statusForm"
-          :rules="statusFormRule"
-          v-loading="loadingAtSubmit"
-          style="margin-top: 16px"
-          ref="statusForm"
-        >
-          <el-form-item label="使用人" prop="user">
-            <el-input v-model="statusForm.user"></el-input>
-          </el-form-item>
-          <el-form-item label="责任人" prop="owner">
-            <el-input v-model="statusForm.owner"></el-input>
-          </el-form-item>
-          <el-form-item label="所属部门" prop="department">
-            <el-input
-              v-model="statusForm.department"
-              :disabled="true"
-              style="width: 180px"
-            ></el-input>
-            &nbsp;
-          </el-form-item>
-        </el-form>
-        <div style="text-align: center">
+      <el-select
+        placeholder="请选择"
+        :value="statusForm.status"
+        v-model="statusForm.status"
+      >
+        <el-option
+          v-for="item in statusOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.value === originStatus"
+        ></el-option>
+      </el-select>
+      <template v-if="!equipmentFormCompliance">
+        <template v-if="statusForm.status === 0">
+          <el-form
+            :model="statusForm"
+            :rules="statusFormRule"
+            v-loading="loadingAtSubmit"
+            style="margin-top: 16px"
+            ref="statusForm"
+          >
+            <el-form-item label="使用人" prop="user">
+              <el-input v-model="statusForm.user"></el-input>
+            </el-form-item>
+            <el-form-item label="责任人" prop="owner">
+              <el-input v-model="statusForm.owner"></el-input>
+            </el-form-item>
+            <el-form-item label="所属部门" prop="department">
+              <el-input
+                v-model="statusForm.department"
+                :disabled="true"
+                style="width: 180px"
+              ></el-input>
+              &nbsp;
+              <el-button @click="openOrganizationStructureSelect"
+                >选择部门</el-button
+              >
+            </el-form-item>
+          </el-form>
+          <div style="text-align: center">
+            <el-button
+              type="primary"
+              :loading="loadingAtSubmit"
+              @click="handleChangeStatus"
+              >确定</el-button
+            >
+          </div>
+        </template>
+        <template v-else>
           <el-button
             type="primary"
-            :loading="loadingAtSubmit"
+            style="margin-left: 12px"
             @click="handleChangeStatus"
+            :loading="loadingAtSubmit"
             >确定</el-button
           >
-        </div>
+        </template>
       </template>
-      <template v-else>
-        <el-button
-          type="primary"
-          style="margin-left: 12px"
-          @click="handleChangeStatus"
-          :loading="loadingAtSubmit"
-          >确定</el-button
-        >
-      </template>
-    </template>
-  </el-dialog>
+    </el-dialog>
+    <organization-structure-select
+      ref="organizationStructureSelect"
+      v-on:getDepartment="setDepartment"
+    />
+  </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from "vue-property-decorator";
+import { Vue, Component, Ref, Emit } from "vue-property-decorator";
 import { ElForm } from "element-ui/types/form";
+import { TreeNode } from "@/store/types";
 import { AxiosResponse } from "axios";
 import { EQUIPMENT_CHANGE_STATUS_API } from "@/store/api";
+import OrganizationStructureSelect from "@/components/OrganizationStructureSelect.vue";
 
-@Component
+@Component({
+  components: { OrganizationStructureSelect }
+})
 export default class EquipmentStatus extends Vue {
   @Ref("statusForm") statusFormIns: ElForm;
+  @Ref() readonly organizationStructureSelect: OrganizationStructureSelect;
 
   visible = false;
   loadingAtSubmit = false;
@@ -144,6 +158,7 @@ export default class EquipmentStatus extends Vue {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
           this.$message.success("更新成功");
+          this.requestData();
         } else {
           this.$message.error(errmsg);
         }
@@ -164,6 +179,18 @@ export default class EquipmentStatus extends Vue {
         })
         .catch(_ => {});
     }
+  }
+
+  @Emit("requestData")
+  requestData() {}
+
+  openOrganizationStructureSelect() {
+    //@ts-ignore
+    this.organizationStructureSelect.openDialog();
+  }
+
+  setDepartment(n: TreeNode) {
+    this.statusForm.department = n.label;
   }
 
   get equipmentFormCompliance(): boolean {

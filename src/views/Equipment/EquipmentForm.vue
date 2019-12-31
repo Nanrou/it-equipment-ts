@@ -196,6 +196,11 @@
             >更新</el-button
           >
           <el-button @click="handleClose">取消</el-button>
+          <el-tooltip effect="dark" content="删除" placement="top-start">
+            <el-button @click="handleRemove" type="text" style="color: #F56C6C">
+              <i class="el-icon-delete" />
+            </el-button>
+          </el-tooltip>
         </el-form-item>
       </template>
     </el-form>
@@ -220,7 +225,11 @@ import {
   TreeNode
 } from "@/store/types";
 import { CategoryOptions } from "@/store/constTypes";
-import { EQUIPMENT_ADD_API, EQUIPMENT_UPDATE_API } from "@/store/api";
+import {
+  EQUIPMENT_ADD_API,
+  EQUIPMENT_UPDATE_API,
+  EQUIPMENT_REMOVE_API
+} from "@/store/api";
 import { State } from "vuex-class";
 import { StoreUser, Hardware } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
@@ -409,6 +418,40 @@ export default class EquipmentFrom extends Vue {
     if (this.action === "add") {
       this.equipmentFormIns.resetFields();
     }
+  }
+
+  handleRemove() {
+    this.$msgbox({
+      message: "确定将此记录删除吗？",
+      title: "警告",
+      showCancelButton: true,
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      beforeClose: (action, instance, done) => {
+        if (action === "confirm") {
+          instance.confirmButtonLoading = true;
+          instance.confirmButtonText = "执行中...";
+          this.$axios
+            .delete(EQUIPMENT_REMOVE_API + `?eid=${this.equipmentForm.eid}`)
+            .then((response: AxiosResponse) => {
+              let { errcode, errmsg } = response.data;
+              if (errcode === 0) {
+                this.$message.success("操作成功！");
+              } else {
+                this.$message.error(errmsg);
+              }
+            })
+            .finally(() => {
+              instance.confirmButtonLoading = false;
+              instance.confirmButtonText = "确定";
+              done();
+              this.handleClose();
+            });
+        } else {
+          done();
+        }
+      }
+    });
   }
 
   confirmCheck(): boolean {
