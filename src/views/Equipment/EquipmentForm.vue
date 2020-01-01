@@ -451,7 +451,9 @@ export default class EquipmentFrom extends Vue {
           done();
         }
       }
-    });
+    })
+      .then(() => {})
+      .catch(() => {});
   }
 
   confirmCheck(): boolean {
