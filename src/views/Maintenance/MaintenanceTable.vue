@@ -12,7 +12,7 @@
         width="40"
         :index="indexMethod"
       ></el-table-column>
-      <el-table-column label="工单编号" prop="oid" width="120">
+      <el-table-column label="工单编号" prop="orderId" width="120">
       </el-table-column>
       <el-table-column label="设备分类" prop="equipment" width="110">
       </el-table-column>
@@ -27,10 +27,12 @@
             <el-tag disable-transitions type="">已指派</el-tag>
           </template>
           <template v-else-if="scope.row.status === 'H'">
-            <el-tag disable-transitions color="#0ee0ff">处理中</el-tag>
+            <el-tag disable-transitions :color="'#0ee0ff'" style="color: #fff"
+              >处理中</el-tag
+            >
           </template>
           <template v-else-if="scope.row.status === 'E'">
-            <el-tag disable-transitions color="#14c010" style="color: #fff"
+            <el-tag disable-transitions :color="'#78c0bd'" style="color: #fff"
               >待评价</el-tag
             >
           </template>
@@ -44,7 +46,6 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <maintenance-flow :oid="scope.row.oid" style="margin-right: 8px" />
           <el-button
             v-if="scope.row.status === 'R'"
             type="text"
@@ -67,16 +68,20 @@
               >
             </el-tooltip>
           </template>
+          <maintenance-flow :oid="scope.row.oid" style="margin-left: 8px" />
         </template>
       </el-table-column>
     </el-table>
-    <maintenance-handle-receive ref="handleReceive" />
+    <maintenance-handle-receive
+      ref="handleReceive"
+      v-on:requestData="requestData"
+    />
     <!-- todo 分页-->
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref, Prop } from "vue-property-decorator";
+import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { MaintenanceOrder } from "@/store/types";
 import MaintenanceFlow from "@/views/Maintenance/MaintenanceFlow.vue";
 import MaintenanceHandleReceive from "@/views/Maintenance/MaintenanceHandleReceive.vue";
@@ -93,12 +98,15 @@ export default class MaintenanceTable extends Vue {
 
   openHandleReceiveDialog(row: MaintenanceOrder) {
     //@ts-ignore
-    this.handleReceiveIns.openDialog(row.oid);
+    this.handleReceiveIns.openDialog(row.oid, row.eid);
   }
 
   indexMethod(index: number) {
     return index + (this.currentPage - 1) * this.pageSize + 1;
   }
+
+  @Emit("requestData")
+  requestData() {}
 }
 </script>
 

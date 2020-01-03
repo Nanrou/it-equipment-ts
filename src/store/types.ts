@@ -91,6 +91,7 @@ export interface UserData {
 
 export interface MaintenanceOrder {
   oid: string;
+  orderId: string;
   status: string;
   pid: string;
   name: string;

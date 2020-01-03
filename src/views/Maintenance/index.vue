@@ -15,6 +15,7 @@
           :page-size="pageSize"
           :table-data="tableData"
           :table-loading="tableLoading"
+          v-on:requestData="requestData"
         />
         <div class="pagination-block">
           <el-pagination

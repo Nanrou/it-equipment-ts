@@ -60,7 +60,11 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="medium" @click="handleRemoteHandle"
+            <el-button
+              type="primary"
+              size="medium"
+              :disabled="remoteHandleForm.method.length === 0"
+              @click="handleRemoteHandle"
               >已解决问题</el-button
             >
           </el-form-item>
@@ -71,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Emit } from "vue-property-decorator";
 import { RemoteHandleMethodOptions } from "@/store/constTypes";
 import { FormOptions, MaintenanceWorker } from "@/store/types";
 import { AxiosResponse } from "axios";
@@ -92,6 +96,7 @@ export default class MaintenanceHandleReceive extends Vue {
   workers: MaintenanceWorker[] = [];
 
   remoteHandleForm = {
+    eid: "",
     method: "",
     remark: ""
   };
@@ -145,6 +150,7 @@ export default class MaintenanceHandleReceive extends Vue {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
           this.$message.success("操作成功！");
+          this.requestData();
           this.closeDialog();
         } else {
           this.$message.error(errmsg);
@@ -155,13 +161,15 @@ export default class MaintenanceHandleReceive extends Vue {
       });
   }
 
-  openDialog(oid: string) {
+  openDialog(oid: string, eid: string) {
     this.oid = oid;
+    this.remoteHandleForm.eid = eid;
     this.visible = true;
   }
 
   closeDialog() {
     this.remoteHandleForm = {
+      eid: "",
       method: "",
       remark: ""
     };
@@ -177,6 +185,9 @@ export default class MaintenanceHandleReceive extends Vue {
   mounted() {
     this.requestWorkers();
   }
+
+  @Emit("requestData")
+  requestData() {}
 }
 </script>
 
