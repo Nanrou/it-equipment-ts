@@ -24,7 +24,14 @@
         &nbsp;
         <el-button @click="openOrganizationStructureSelect">选择部门</el-button>
       </el-form-item>
-      <!-- todo role & password -->
+      <el-form-item label="权限" required>
+        <el-checkbox-group v-model="roleList" @change="handleChangeRole">
+          <el-checkbox v-for="i in roleOptions" :label="i.label" :key="i.value">
+            {{ i.label }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <!-- todo password -->
     </el-form>
     <organization-structure-select
       ref="organizationStructureSelect"
@@ -38,6 +45,7 @@ import { Vue, Component, Ref, Emit } from "vue-property-decorator";
 import { UserData, TreeNode } from "@/store/types";
 import OrganizationStructureSelect from "@/components/OrganizationStructureSelect.vue";
 import { ElForm } from "element-ui/types/form";
+import { RoleOptions } from "@/store/constTypes";
 
 @Component({
   components: { OrganizationStructureSelect }
@@ -63,6 +71,8 @@ export default class UserForm extends Vue {
       { required: true, message: "必须选择所属部门", trigger: "blur" }
     ]
   };
+  roleOptions = RoleOptions;
+  roleList = [];
 
   setDepartment(n: TreeNode) {
     this.userForm.department = n.label;
@@ -75,16 +85,35 @@ export default class UserForm extends Vue {
 
   initUserForm(form: any) {
     this.userForm = { ...form };
+    for (let i of this.roleOptions) {
+      if (i.value & this.userForm.role) {
+        //@ts-ignore
+        this.roleList.push(i.label);
+      }
+    }
   }
 
   outputUserForm() {
     this.userFormIns.validate(valid => {
       if (valid) {
+        this.userForm.username = this.userForm.workNumber + this.userForm.name;
         this.handleValidCallback(this.userForm);
       } else {
         this.handleValidCallback(false);
       }
     });
+  }
+
+  handleChangeRole() {
+    this.userForm.role = 0;
+    for (let r of this.roleList) {
+      for (let i of this.roleOptions) {
+        if (i.label === r) {
+          this.userForm.role += i.value;
+          break;
+        }
+      }
+    }
   }
 
   @Emit("validCallback")

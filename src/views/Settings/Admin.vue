@@ -13,7 +13,17 @@
       <el-table-column label="姓名" prop="name"></el-table-column>
       <el-table-column label="部门" prop="department"></el-table-column>
       <el-table-column label="联系方式" prop="phone"></el-table-column>
-      <el-table-column label="权限" prop="role"></el-table-column>
+      <el-table-column label="权限">
+        <template slot-scope="scope">
+          <span v-for="i in roleOptions" :key="i.value">
+            <el-tag
+              v-if="i.value & scope.row.role"
+              style="margin-right: 2px; margin-bottom: 2px"
+              >{{ i.label }}</el-tag
+            >
+          </span>
+        </template>
+      </el-table-column>
     </el-table>
     <el-dialog
       title="新增用户"
@@ -62,6 +72,7 @@ import { UserData } from "@/store/types";
 import { ADMIN_API, CREATE_USER_API, UPDATE_USER_API } from "@/store/api";
 import { AxiosResponse } from "axios";
 import UserForm from "@/views/Settings/UserForm.vue";
+import { RoleOptions } from "@/store/constTypes";
 
 @Component({
   components: { UserForm }
@@ -75,6 +86,7 @@ export default class Admin extends Vue {
   dialogVisible = false;
   drawerVisible = false;
   userData: UserData[] = [];
+  roleOptions = RoleOptions;
 
   requestData() {
     this.loadingAtRequest = true;
@@ -121,6 +133,7 @@ export default class Admin extends Vue {
           if (errcode === 0) {
             this.$message.success("新增用户成功！");
             this.dialogVisible = false;
+            this.requestData();
           } else {
             this.$message.error(errmsg);
           }
@@ -135,12 +148,13 @@ export default class Admin extends Vue {
     if (form) {
       this.loadingAtSubmit = true;
       this.$axios
-        .patch(UPDATE_USER_API + `$pid=${form.pid}`, form)
+        .patch(UPDATE_USER_API + `?uid=${form.uid}`, form)
         .then((response: AxiosResponse) => {
           let { errcode, errmsg } = response.data;
           if (errcode === 0) {
             this.$message.success("修改用户成功！");
             this.drawerVisible = false;
+            this.requestData();
           } else {
             this.$message.error(errmsg);
           }

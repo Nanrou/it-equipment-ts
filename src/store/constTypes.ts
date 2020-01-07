@@ -43,3 +43,11 @@ export const EquipmentStatusOptions = [
   { label: "备用", value: 2 },
   { label: "报废", value: 3 }
 ];
+
+export const RoleOptions = [
+  { label: "普通写", value: 0b000001 },
+  { label: "高级写", value: 0b000010 },
+  { label: "维修", value: 0b000100 },
+  { label: "高级维修", value: 0b001000 },
+  { label: "super", value: 0b010000 }
+];

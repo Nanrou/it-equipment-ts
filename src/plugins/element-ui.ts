@@ -37,7 +37,8 @@ import {
   TabPane,
   Pagination,
   Card,
-  Checkbox
+  Checkbox,
+  CheckboxGroup
 } from "element-ui";
 
 Vue.component(Button.name, Button);
@@ -75,6 +76,7 @@ Vue.component(TabPane.name, TabPane);
 Vue.component(Pagination.name, Pagination);
 Vue.component(Card.name, Card);
 Vue.component(Checkbox.name, Checkbox);
+Vue.component(CheckboxGroup.name, CheckboxGroup);
 
 Vue.use(Loading.directive);
 Vue.prototype.$message = Message;
