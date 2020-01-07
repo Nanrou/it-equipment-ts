@@ -3,7 +3,7 @@
     placement="left-start"
     @show="requestData"
     width="350"
-    trigger="hover"
+    trigger="click"
     v-loading="loadingAtRequest"
   >
     <template v-if="flow">
@@ -28,7 +28,12 @@
       </div>
     </template>
     <template v-else>怎么就找不到了呢 &nbsp; (╯￣Д￣)╯╘═╛</template>
-    <el-button slot="reference" type="text" icon="el-icon-tickets"></el-button>
+    <el-button
+      slot="reference"
+      type="text"
+      icon="el-icon-tickets"
+      style="font-size: 18px"
+    ></el-button>
   </el-popover>
 </template>
 
@@ -94,4 +99,8 @@ export default class MaintenanceFlow extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.el-step__description {
+  font-size: 14px;
+}
+</style>
