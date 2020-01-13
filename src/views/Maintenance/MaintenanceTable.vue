@@ -76,7 +76,6 @@
       ref="handleReceive"
       v-on:requestData="requestData"
     />
-    <!-- todo 分页-->
   </div>
 </template>
 
@@ -98,7 +97,7 @@ export default class MaintenanceTable extends Vue {
 
   openHandleReceiveDialog(row: MaintenanceOrder) {
     //@ts-ignore
-    this.handleReceiveIns.openDialog(row.oid, row.eid);
+    this.handleReceiveIns.openDialog(row.oid, row.eid, row.orderId);
   }
 
   indexMethod(index: number) {

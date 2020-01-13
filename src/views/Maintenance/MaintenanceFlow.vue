@@ -72,7 +72,7 @@ export default class MaintenanceFlow extends Vue {
       case "R":
         return "上报";
       case "D":
-        return "指派";
+        return "派工";
       case "H":
         return "到达现场";
       case "E":

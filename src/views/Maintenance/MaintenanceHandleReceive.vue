@@ -8,33 +8,50 @@
   >
     <el-tabs type="border-card" style="height: 320px">
       <el-tab-pane label="派工">
-        <div style="text-align: center; margin-top: 80px">
-          <el-select
-            :value="workers"
-            v-model="workers"
-            multiple
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in maintenanceWorkers"
-              :key="item.pid"
-              :label="item.name"
-              :value="item.pid"
-            ></el-option>
-          </el-select>
-          <div style="text-align: center; margin-top: 12px">
+        <el-form label-width="80px" style="margin-top: 28px">
+          <el-form-item label="负责人员">
+            <el-select
+              :value="unless"
+              v-model="unless"
+              placeholder="请选择"
+              @change="handleSelectWorker"
+            >
+              <el-option
+                v-for="item in maintenanceWorkers"
+                :key="item.pid"
+                :label="item.name"
+                :value="`${item.pid}|${item.name}`"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input
+              type="textarea"
+              maxlength="128"
+              :autosize="{ minRows: 3, maxRows: 4 }"
+              placeholder="请填写备注内容"
+              v-model="dispatchRemark"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item>
             <el-button
               type="primary"
-              :disabled="loadingAtRequest || workers.length === 0"
+              size="medium"
+              :disabled="loadingAtRequest || worker.pid.length === 0"
               @click="handleDispatchWorker"
               :loading="loadingAtSubmit"
               >确认派工</el-button
             >
-          </div>
-        </div>
+          </el-form-item>
+        </el-form>
       </el-tab-pane>
       <el-tab-pane label="远程处理">
-        <el-form :model="remoteHandleForm">
+        <el-form
+          :model="remoteHandleForm"
+          label-width="80px"
+          style="margin-top: 28px"
+        >
           <el-form-item label="处理方式">
             <el-select
               :value="remoteHandleForm.method"
@@ -65,7 +82,7 @@
               size="medium"
               :disabled="remoteHandleForm.method.length === 0"
               @click="handleRemoteHandle"
-              >已解决问题</el-button
+              >确认解决</el-button
             >
           </el-form-item>
         </el-form>
@@ -91,9 +108,16 @@ export default class MaintenanceHandleReceive extends Vue {
   loadingAtRequest = false;
   loadingAtSubmit = false;
   oid = "";
+  orderId = "";
 
   maintenanceWorkers: MaintenanceWorker[] = [];
-  workers: MaintenanceWorker[] = [];
+  // workers: string[] = [];
+  unless = "";
+  worker: MaintenanceWorker = {
+    pid: "",
+    name: ""
+  };
+  dispatchRemark = "";
 
   remoteHandleForm = {
     eid: "",
@@ -127,11 +151,16 @@ export default class MaintenanceHandleReceive extends Vue {
   handleDispatchWorker() {
     this.loadingAtSubmit = true;
     this.$axios
-      .patch(MAINTENANCE_DISPATCH_API + `?oid=${this.oid}`, this.workers)
+      .patch(MAINTENANCE_DISPATCH_API + `?oid=${this.oid}`, {
+        worker: this.worker,
+        orderId: this.orderId,
+        remark: this.dispatchRemark
+      })
       .then((response: AxiosResponse) => {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
           this.$message.success("派遣成功！");
+          this.requestData();
           this.closeDialog();
         } else {
           this.$message.error(errmsg);
@@ -161,8 +190,9 @@ export default class MaintenanceHandleReceive extends Vue {
       });
   }
 
-  openDialog(oid: string, eid: string) {
+  openDialog(oid: string, eid: string, orderId: string) {
     this.oid = oid;
+    this.orderId = orderId;
     this.remoteHandleForm.eid = eid;
     this.visible = true;
   }
@@ -173,8 +203,21 @@ export default class MaintenanceHandleReceive extends Vue {
       method: "",
       remark: ""
     };
-    this.workers = [];
+    this.worker = {
+      pid: "",
+      name: ""
+    };
+    this.oid = "";
+    this.orderId = "";
     this.visible = false;
+  }
+
+  handleSelectWorker(value: string) {
+    let _tmp = value.split("|");
+    this.worker = {
+      pid: _tmp[0],
+      name: _tmp[1]
+    };
   }
 
   handleClose(done: any) {
