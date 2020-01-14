@@ -27,7 +27,7 @@
             <el-tag disable-transitions type="">已指派</el-tag>
           </template>
           <template v-else-if="scope.row.status === 'H'">
-            <el-tag disable-transitions :color="'#0ee0ff'" style="color: #fff"
+            <el-tag disable-transitions :color="'#00A3BB'" style="color: #fff"
               >处理中</el-tag
             >
           </template>
@@ -97,7 +97,7 @@ export default class MaintenanceTable extends Vue {
 
   openHandleReceiveDialog(row: MaintenanceOrder) {
     //@ts-ignore
-    this.handleReceiveIns.openDialog(row.oid, row.eid, row.orderId);
+    this.handleReceiveIns.openDialog(row.oid, row.eid);
   }
 
   indexMethod(index: number) {

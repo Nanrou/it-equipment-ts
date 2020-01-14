@@ -108,7 +108,6 @@ export default class MaintenanceHandleReceive extends Vue {
   loadingAtRequest = false;
   loadingAtSubmit = false;
   oid = "";
-  orderId = "";
 
   maintenanceWorkers: MaintenanceWorker[] = [];
   // workers: string[] = [];
@@ -153,7 +152,6 @@ export default class MaintenanceHandleReceive extends Vue {
     this.$axios
       .patch(MAINTENANCE_DISPATCH_API + `?oid=${this.oid}`, {
         worker: this.worker,
-        orderId: this.orderId,
         remark: this.dispatchRemark
       })
       .then((response: AxiosResponse) => {
@@ -190,9 +188,8 @@ export default class MaintenanceHandleReceive extends Vue {
       });
   }
 
-  openDialog(oid: string, eid: string, orderId: string) {
+  openDialog(oid: string, eid: string) {
     this.oid = oid;
-    this.orderId = orderId;
     this.remoteHandleForm.eid = eid;
     this.visible = true;
   }
@@ -208,7 +205,6 @@ export default class MaintenanceHandleReceive extends Vue {
       name: ""
     };
     this.oid = "";
-    this.orderId = "";
     this.visible = false;
   }
 

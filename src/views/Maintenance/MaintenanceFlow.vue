@@ -1,6 +1,6 @@
 <template>
   <el-popover
-    placement="left-start"
+    placement="left"
     @show="requestData"
     width="350"
     trigger="click"

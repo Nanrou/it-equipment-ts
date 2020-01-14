@@ -2,7 +2,10 @@
   <div>
     <el-container>
       <el-header height="auto">
-        <el-button type="primary" @click="openDialog">新增设备</el-button>
+        <el-button type="primary" @click="openDialog">
+          <i class="el-icon-circle-plus-outline"></i>
+          新增设备
+        </el-button>
         <table-filter-form
           :tableType="'equipment'"
           v-on:getFilterParam="getFilterParam"

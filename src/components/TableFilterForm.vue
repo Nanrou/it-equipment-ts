@@ -35,7 +35,9 @@
         :value="filterForm.status"
         v-model="filterForm.status"
         multiple
-        placeholder="请选择工单状态"
+        :placeholder="
+          tableType === 'equipment' ? '请选择设备状态' : '请选择工单状态'
+        "
       >
         <el-option
           v-for="item in statusOptions"
