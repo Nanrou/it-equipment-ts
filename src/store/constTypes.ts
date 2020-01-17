@@ -51,3 +51,8 @@ export const RoleOptions = [
   { label: "高级维修", value: 0b001000 },
   { label: "super", value: 0b010000 }
 ];
+
+export const ConfigMapper = {
+  sendSms: "发送短信",
+  sendEmail: "发送邮件"
+};

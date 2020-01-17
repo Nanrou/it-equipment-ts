@@ -3,6 +3,7 @@ export const LOGIN_API = "/api/user/login";
 export const LOGOUT_API = "/api/user/logout";
 export const CHANGE_PASSWORD_API = "/api/user/changePassword";
 export const ADMIN_API = "/api/user/admin";
+export const CONFIG_API = "/api/user/config";
 export const CREATE_USER_API = "/api/user/create";
 export const UPDATE_USER_API = "/api/user/update";
 
