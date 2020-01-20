@@ -134,6 +134,18 @@ const routes = [
               import(
                 /* webpackChunkName: "settings" */ "../views/Settings/Department.vue"
               )
+          },
+          {
+            path: "/system",
+            name: "system",
+            meta: {
+              icon: "el-icon-cpu",
+              title: "系统配置"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "settings" */ "../views/Settings/System.vue"
+              )
           }
         ]
       }

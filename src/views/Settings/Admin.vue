@@ -1,26 +1,5 @@
 <template>
   <div>
-    <el-form inline v-loading="loadingAtRequestConfig">
-      <el-form-item
-        label="系统配置："
-        style="font-weight: bolder"
-      ></el-form-item>
-      <el-form-item
-        v-for="c in configList"
-        :key="c[0]"
-        :label="configMapper[c[0]]"
-      >
-        <el-switch
-          v-model="c[1]"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          active-value="1"
-          inactive-value="0"
-          @change="handleConfigChange(c)"
-        >
-        </el-switch>
-      </el-form-item>
-    </el-form>
     <el-button type="primary" @click="dialogVisible = true">添加用户</el-button>
     <el-table
       :data="userData"
@@ -90,15 +69,10 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import { UserData } from "@/store/types";
-import {
-  ADMIN_API,
-  CREATE_USER_API,
-  UPDATE_USER_API,
-  CONFIG_API
-} from "@/store/api";
+import { ADMIN_API, CREATE_USER_API, UPDATE_USER_API } from "@/store/api";
 import { AxiosResponse } from "axios";
 import UserForm from "@/views/Settings/UserForm.vue";
-import { RoleOptions, ConfigMapper } from "@/store/constTypes";
+import { RoleOptions } from "@/store/constTypes";
 
 @Component({
   components: { UserForm }
@@ -108,14 +82,11 @@ export default class Admin extends Vue {
   @Ref("createForm") createFormIns: UserForm;
 
   loadingAtRequest = false;
-  loadingAtRequestConfig = false;
   loadingAtSubmit = false;
   dialogVisible = false;
   drawerVisible = false;
   userData: UserData[] = [];
   roleOptions = RoleOptions;
-  configMapper = ConfigMapper;
-  configList: [] = []; // [[k, v], ...]
 
   requestData() {
     this.loadingAtRequest = true;
@@ -194,44 +165,8 @@ export default class Admin extends Vue {
     }
   }
 
-  requestConfig() {
-    this.loadingAtRequestConfig = true;
-    this.$axios
-      .get(CONFIG_API)
-      .then((response: AxiosResponse) => {
-        let { errcode, errmsg, data } = response.data;
-        if (errcode === 0) {
-          this.configList = data;
-        } else {
-          this.$message.error(errmsg);
-        }
-      })
-      .finally(() => {
-        this.loadingAtRequestConfig = false;
-      });
-  }
-
-  handleConfigChange(c: string[]) {
-    this.loadingAtRequestConfig = true;
-    this.$axios
-      .patch(CONFIG_API, { key: c[0], value: c[1] })
-      .then((response: AxiosResponse) => {
-        let { errcode, errmsg } = response.data;
-        if (errcode === 0) {
-          //@ts-ignore
-          this.$message.success(`更改${this.configMapper[c[0]]}配置成功`);
-        } else {
-          this.$message.error(errmsg);
-        }
-      })
-      .finally(() => {
-        this.loadingAtRequestConfig = false;
-      });
-  }
-
   mounted() {
     this.requestData();
-    this.requestConfig();
   }
 }
 </script>
