@@ -56,8 +56,8 @@ const routes = [
           )
       },
       {
-        path: "/chart",
-        name: "chart",
+        path: "/statistics",
+        name: "statistics",
         meta: {
           icon: "el-icon-pie-chart",
           title: "报表相关"
@@ -65,15 +65,15 @@ const routes = [
         component: { render: (h: any) => h("router-view") },
         children: [
           {
-            path: "/equipment-chart",
-            name: "equipment-chart",
+            path: "/chart",
+            name: "chart",
             meta: {
               icon: "el-icon-data-line",
-              title: "设备统计"
+              title: "图形统计"
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/Chart/EquipmentChart.vue"
+                /* webpackChunkName: "settings" */ "../views/Statistics/Chart.vue"
               )
           },
           {
@@ -85,7 +85,7 @@ const routes = [
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/Chart/DepartmentChart.vue"
+                /* webpackChunkName: "settings" */ "../views/Statistics/DepartmentChart.vue"
               )
           }
         ]

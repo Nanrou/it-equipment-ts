@@ -39,11 +39,11 @@ export default class EquipmentChart extends Vue {
       type: "二次供水",
       name: "停电"
     },
-    {
-      value: 335,
-      type: "设施受损",
-      name: "办公环境损坏"
-    },
+    // {
+    //   value: 335,
+    //   type: "设施受损",
+    //   name: "办公环境损坏"
+    // },
     {
       value: 250,
       type: "设施受损",
@@ -58,12 +58,19 @@ export default class EquipmentChart extends Vue {
       padding: 0,
       height: 560
     });
-    let dv = new DataSet.DataView();
-    dv.source(data).transform({
+    let dv = new DataSet.View().source(data);
+    dv.transform({
       type: "percent",
       field: "value",
       dimension: "type",
       as: "percent"
+    });
+    dv.transform({
+      type: "map",
+      callback(row: any) {
+        row.nv = row.name + " " + row.value;
+        return row;
+      }
     });
     // 内圈
     chart.source(dv, {
@@ -87,7 +94,7 @@ export default class EquipmentChart extends Vue {
       .label("type", {
         offset: -10
       })
-      .tooltip("name*percent", function(item: string, percent: any) {
+      .tooltip("nv*percent", function(item: string, percent: any) {
         return {
           name: item,
           value: (percent * 100).toFixed(2) + "%"
@@ -99,26 +106,33 @@ export default class EquipmentChart extends Vue {
         stroke: "#fff"
       });
     // 外圈
-    let outterView = chart.view();
-    let dv1 = new DataSet.DataView();
-    dv1.source(data).transform({
+    let outerView = chart.view();
+    let dv1 = new DataSet.View().source(data);
+    dv1.transform({
       type: "percent",
       field: "value",
       dimension: "name",
       as: "percent"
     });
-    outterView.source(dv1, {
+    dv1.transform({
+      type: "map",
+      callback(row: any) {
+        row.nv = row.name + " " + row.value;
+        return row;
+      }
+    });
+    outerView.source(dv1, {
       percent: {
         formatter: function formatter(val: number) {
           return (val * 100).toFixed(2) + "%";
         }
       }
     });
-    outterView.coord("theta", {
+    outerView.coord("theta", {
       innerRadius: 0.5 / 0.75,
       radius: 0.75
     });
-    outterView
+    outerView
       .intervalStack()
       .position("percent")
       .color("name", [
@@ -130,7 +144,7 @@ export default class EquipmentChart extends Vue {
         "#BAF5C4"
       ])
       .label("name")
-      .tooltip("name*percent", function(item: string, percent: any) {
+      .tooltip("nv*percent", function(item: string, percent: any) {
         percent = (percent * 100).toFixed(2) + "%";
         return {
           name: item,
