@@ -1,23 +1,54 @@
 <template>
   <div>
     <el-form inline>
-      <el-button>按设备分类统计</el-button>
+      <el-button @click="handleStatistics('category')"
+        >按设备分类统计</el-button
+      >
+      <el-button @click="handleStatistics('department')"
+        >按使用部门统计</el-button
+      >
       <el-button>按投入使用时间统计</el-button>
+      <el-button @click="pieChart.clear()">clear</el-button>
+      <el-button @click="pieChart.repaint()">repaint</el-button>
+      <el-button @click="pieChart.destroy()">destroy</el-button>
     </el-form>
-    <el-card style="margin-top: 12px; height: 600px">
-      <div id="equipment-chart"></div>
+    <el-card
+      v-loading="loadingAtRequest"
+      style="margin-top: 12px; height: 600px"
+    >
+      <template v-if="currentType === ''">
+        <div>
+          <i class="el-icon-top"></i>请先选择统计类别<i class="el-icon-top"></i>
+        </div>
+      </template>
+      <template v-else-if="currentType === 'purchasingTime'"></template>
+      <template v-else>
+        <PieChart
+          ref="pieChart"
+          :type="currentType"
+          :source-data="sourceData"
+        ></PieChart>
+      </template>
     </el-card>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import G2 from "@antv/g2";
-import DataSet from "@antv/data-set";
+import { Vue, Component, Ref } from "vue-property-decorator";
+import { AxiosResponse } from "axios";
+import PieChart from "@/views/Statistics/PieChart.vue";
+import {
+  STATISTICS_DEPARTMENT_API,
+  STATISTICS_EQUIPMENT_API
+} from "@/store/api";
 
-@Component
-export default class EquipmentChart extends Vue {
-  chart: G2.Chart;
+@Component({
+  components: { PieChart }
+})
+export default class Chart extends Vue {
+  @Ref() readonly pieChart: PieChart;
+  loadingAtRequest = false;
+  currentType: "" | "category" | "department" | "purchasingTime" = "";
   sourceData = [
     {
       value: 251,
@@ -51,116 +82,35 @@ export default class EquipmentChart extends Vue {
     }
   ];
 
-  draw(data: any) {
-    let chart = new G2.Chart({
-      container: "equipment-chart",
-      forceFit: true,
-      padding: 0,
-      height: 560
-    });
-    let dv = new DataSet.View().source(data);
-    dv.transform({
-      type: "percent",
-      field: "value",
-      dimension: "type",
-      as: "percent"
-    });
-    dv.transform({
-      type: "map",
-      callback(row: any) {
-        row.nv = row.name + " " + row.value;
-        return row;
-      }
-    });
-    // 内圈
-    chart.source(dv, {
-      percent: {
-        formatter: function formatter(val: number) {
-          return (val * 100).toFixed(2) + "%";
+  handleStatistics(type: "category" | "department" | "purchasingTime") {
+    this.loadingAtRequest = true;
+    let _api: string = "";
+    switch (type) {
+      case "category":
+        _api = STATISTICS_EQUIPMENT_API;
+        break;
+      case "department":
+        _api = STATISTICS_DEPARTMENT_API;
+        break;
+    }
+    this.$axios
+      .get(_api)
+      .then((response: AxiosResponse) => {
+        let { errcode, errmsg, data } = response.data;
+        if (errcode === 0) {
+          this.sourceData = data.sourceData;
+          this.currentType = type;
+          setTimeout(() => {
+            this.pieChart.destroy(); // 手动删除再draw
+            this.pieChart.draw();
+          }, 0);
+        } else {
+          this.$message.error(errmsg);
         }
-      }
-    });
-    chart.coord("theta", {
-      radius: 0.5
-    });
-    chart.tooltip({
-      showTitle: false
-    });
-    chart.legend(false);
-    chart
-      .intervalStack()
-      .position("percent")
-      .color("type")
-      .label("type", {
-        offset: -10
       })
-      .tooltip("nv*percent", function(item: string, percent: any) {
-        return {
-          name: item,
-          value: (percent * 100).toFixed(2) + "%"
-        };
-      })
-      .select(false)
-      .style({
-        lineWidth: 1,
-        stroke: "#fff"
+      .finally(() => {
+        this.loadingAtRequest = false;
       });
-    // 外圈
-    let outerView = chart.view();
-    let dv1 = new DataSet.View().source(data);
-    dv1.transform({
-      type: "percent",
-      field: "value",
-      dimension: "name",
-      as: "percent"
-    });
-    dv1.transform({
-      type: "map",
-      callback(row: any) {
-        row.nv = row.name + " " + row.value;
-        return row;
-      }
-    });
-    outerView.source(dv1, {
-      percent: {
-        formatter: function formatter(val: number) {
-          return (val * 100).toFixed(2) + "%";
-        }
-      }
-    });
-    outerView.coord("theta", {
-      innerRadius: 0.5 / 0.75,
-      radius: 0.75
-    });
-    outerView
-      .intervalStack()
-      .position("percent")
-      .color("name", [
-        "#BAE7FF",
-        "#7FC9FE",
-        "#71E3E3",
-        "#ABF5F5",
-        "#8EE0A1",
-        "#BAF5C4"
-      ])
-      .label("name")
-      .tooltip("nv*percent", function(item: string, percent: any) {
-        percent = (percent * 100).toFixed(2) + "%";
-        return {
-          name: item,
-          value: percent
-        };
-      })
-      .style({
-        lineWidth: 1,
-        stroke: "#fff"
-      });
-    this.chart = chart;
-    this.chart.render();
-  }
-
-  mounted() {
-    this.draw(this.sourceData);
   }
 }
 </script>

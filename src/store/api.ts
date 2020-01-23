@@ -30,3 +30,6 @@ export const ORGANIZATION_QUERY_API = "/api/organization/query";
 export const ORGANIZATION_ADD_API = "/api/organization/add";
 export const ORGANIZATION_UPDATE_API = "/api/organization/update";
 export const ORGANIZATION_REMOVE_API = "/api/organization/remove";
+
+export const STATISTICS_EQUIPMENT_API = "/api/statistics/category";
+export const STATISTICS_DEPARTMENT_API = "/api/statistics/department";
