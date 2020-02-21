@@ -14,7 +14,8 @@ export default class PieChart extends Vue {
   chart: G2.Chart;
   firstDraw = true;
 
-  draw() {
+  draw(doubleCircle: boolean) {
+    // 堆叠饼图对数据顺序有要求，要手动排序，不然内外圈对不上
     let data = this.sourceData;
     let chart = new G2.Chart({
       // container: `${this.type}-chart`,
@@ -25,11 +26,8 @@ export default class PieChart extends Vue {
     });
     let dv = new DataSet.View().source(data);
     dv.transform({
-      type: "map",
-      callback(row: any) {
-        row.type = row.name;
-        return row;
-      }
+      type: "sort-by",
+      fields: ["ancestor"]
     });
     dv.transform({
       type: "map",
@@ -41,7 +39,7 @@ export default class PieChart extends Vue {
     dv.transform({
       type: "percent",
       field: "value",
-      dimension: "type",
+      dimension: doubleCircle ? "ancestor" : "name",
       as: "percent"
     });
     // 内圈
@@ -56,77 +54,107 @@ export default class PieChart extends Vue {
       radius: 0.5
     });
     chart.tooltip({
-      showTitle: false
+      showTitle: false,
+      itemTpl:
+        '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
     });
     chart.legend(false);
-    chart
-      .intervalStack()
-      .position("percent")
-      .color("type")
-      .label("type", {
-        offset: -10
-      })
-      .tooltip("nv*percent", function(item: string, percent: any) {
-        return {
-          name: item,
-          value: (percent * 100).toFixed(2) + "%"
-        };
-      })
-      .select(false)
-      .style({
-        lineWidth: 1,
-        stroke: "#fff"
+
+    if (doubleCircle) {
+      chart
+        .intervalStack()
+        .position("percent")
+        .color("ancestor")
+        .label("ancestor", {
+          offset: -10
+        })
+        .tooltip("name*value*percent", function(
+          item: string,
+          value_: string,
+          percent: any
+        ) {
+          return {
+            name: item,
+            value: `${value_}(${(percent * 100).toFixed(2)}%)`
+          };
+        })
+        .select(false)
+        .style({
+          lineWidth: 1,
+          stroke: "#fff"
+        });
+      // 外圈
+      let outerView = chart.view();
+      let dv1 = new DataSet.View().source(data);
+      dv1.transform({
+        type: "sort-by",
+        fields: ["ancestor"]
       });
-    // 外圈
-    let outerView = chart.view();
-    let dv1 = new DataSet.View().source(data);
-    dv1.transform({
-      type: "percent",
-      field: "value",
-      dimension: "name",
-      as: "percent"
-    });
-    dv1.transform({
-      type: "map",
-      callback(row: any) {
-        row.nv = row.name + " " + row.value;
-        return row;
-      }
-    });
-    outerView.source(dv1, {
-      percent: {
-        formatter: function formatter(val: number) {
-          return (val * 100).toFixed(2) + "%";
+      dv1.transform({
+        type: "percent",
+        field: "value",
+        dimension: "name",
+        as: "percent"
+      });
+      outerView.source(dv1, {
+        percent: {
+          formatter: function formatter(val: number) {
+            return (val * 100).toFixed(2) + "%";
+          }
         }
-      }
-    });
-    outerView.coord("theta", {
-      innerRadius: 0.5 / 0.75,
-      radius: 0.75
-    });
-    outerView
-      .intervalStack()
-      .position("percent")
-      .color("name", [
-        "#BAE7FF",
-        "#7FC9FE",
-        "#71E3E3",
-        "#ABF5F5",
-        "#8EE0A1",
-        "#BAF5C4"
-      ])
-      .label("name")
-      .tooltip("nv*percent", function(item: string, percent: any) {
-        percent = (percent * 100).toFixed(2) + "%";
-        return {
-          name: item,
-          value: percent
-        };
-      })
-      .style({
-        lineWidth: 1,
-        stroke: "#fff"
       });
+      outerView.coord("theta", {
+        innerRadius: 0.5 / 0.75,
+        radius: 0.75
+      });
+      outerView
+        .intervalStack()
+        .position("percent")
+        .color("name", [
+          "#BAE7FF",
+          "#7FC9FE",
+          "#71E3E3",
+          "#ABF5F5",
+          "#8EE0A1",
+          "#BAF5C4"
+        ])
+        .label("name")
+        .tooltip("name*value*percent", function(
+          item: string,
+          value_: string,
+          percent: any
+        ) {
+          return {
+            name: item,
+            value: `${value_}(${(percent * 100).toFixed(2)}%)`
+          };
+        })
+        .style({
+          lineWidth: 1,
+          stroke: "#fff"
+        });
+    } else {
+      chart
+        .intervalStack()
+        .position("percent")
+        .color("name")
+        .label("name")
+        .tooltip("name*value*percent", function(
+          item: string,
+          value_: string,
+          percent: any
+        ) {
+          return {
+            name: item,
+            value: `${value_}(${(percent * 100).toFixed(2)}%)`
+          };
+        })
+        .select(false)
+        .style({
+          lineWidth: 1,
+          stroke: "#fff"
+        });
+    }
     this.chart = chart;
     this.chart.render();
     this.firstDraw = false;

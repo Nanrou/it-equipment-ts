@@ -49,38 +49,7 @@ export default class Chart extends Vue {
   @Ref() readonly pieChart: PieChart;
   loadingAtRequest = false;
   currentType: "" | "category" | "department" | "purchasingTime" = "";
-  sourceData = [
-    {
-      value: 251,
-      type: "爆管",
-      name: "水泥管"
-    },
-    {
-      value: 1048,
-      type: "爆管",
-      name: "钢管"
-    },
-    {
-      value: 610,
-      type: "二次供水",
-      name: "海水倒灌"
-    },
-    {
-      value: 434,
-      type: "二次供水",
-      name: "停电"
-    },
-    // {
-    //   value: 335,
-    //   type: "设施受损",
-    //   name: "办公环境损坏"
-    // },
-    {
-      value: 250,
-      type: "设施受损",
-      name: "设备故障"
-    }
-  ];
+  sourceData = [];
 
   handleStatistics(type: "category" | "department" | "purchasingTime") {
     this.loadingAtRequest = true;
@@ -100,9 +69,12 @@ export default class Chart extends Vue {
         if (errcode === 0) {
           this.sourceData = data.sourceData;
           this.currentType = type;
+          let doubleCircle = data.doubleCircle as boolean;
           setTimeout(() => {
+            // @ts-ignore
             this.pieChart.destroy(); // 手动删除再draw
-            this.pieChart.draw();
+            // @ts-ignore
+            this.pieChart.draw(doubleCircle);
           }, 0);
         } else {
           this.$message.error(errmsg);

@@ -5,7 +5,7 @@ declare module "@antv/data-set" {
   }
 
   interface transformOptions {
-    type: "rename" | "percent" | "map";
+    type: "rename" | "percent" | "map" | "sort" | "sort-by";
     field?: string;
     fields?: string[];
     dimension?: string;
