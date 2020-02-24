@@ -33,3 +33,6 @@ export const ORGANIZATION_REMOVE_API = "/api/organization/remove";
 
 export const STATISTICS_EQUIPMENT_API = "/api/statistics/category";
 export const STATISTICS_DEPARTMENT_API = "/api/statistics/department";
+export const STATISTICS_PURCHASING_TIME_API = "/api/statistics/purchasingTime";
+export const STATISTICS_PREVIEW_API = "/api/statistics/preview";
+export const STATISTICS_DOWNLOAD_API = "/api/statistics/download";

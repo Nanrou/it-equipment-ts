@@ -77,15 +77,15 @@ const routes = [
               )
           },
           {
-            path: "/department-chart",
-            name: "department-chart",
+            path: "/output",
+            name: "output",
             meta: {
               icon: "el-icon-data-analysis",
-              title: "部门统计"
+              title: "报表导出"
             },
             component: () =>
               import(
-                /* webpackChunkName: "settings" */ "../views/Statistics/DepartmentChart.vue"
+                /* webpackChunkName: "settings" */ "../views/Statistics/Output.vue"
               )
           }
         ]

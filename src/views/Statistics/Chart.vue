@@ -7,10 +7,9 @@
       <el-button @click="handleStatistics('department')"
         >按使用部门统计</el-button
       >
-      <el-button>按投入使用时间统计</el-button>
-      <el-button @click="pieChart.clear()">clear</el-button>
-      <el-button @click="pieChart.repaint()">repaint</el-button>
-      <el-button @click="pieChart.destroy()">destroy</el-button>
+      <el-button @click="handleStatistics('purchasingTime')"
+        >按投入使用时间统计</el-button
+      >
     </el-form>
     <el-card
       v-loading="loadingAtRequest"
@@ -21,7 +20,6 @@
           <i class="el-icon-top"></i>请先选择统计类别<i class="el-icon-top"></i>
         </div>
       </template>
-      <template v-else-if="currentType === 'purchasingTime'"></template>
       <template v-else>
         <PieChart
           ref="pieChart"
@@ -39,7 +37,8 @@ import { AxiosResponse } from "axios";
 import PieChart from "@/views/Statistics/PieChart.vue";
 import {
   STATISTICS_DEPARTMENT_API,
-  STATISTICS_EQUIPMENT_API
+  STATISTICS_EQUIPMENT_API,
+  STATISTICS_PURCHASING_TIME_API
 } from "@/store/api";
 
 @Component({
@@ -60,6 +59,9 @@ export default class Chart extends Vue {
         break;
       case "department":
         _api = STATISTICS_DEPARTMENT_API;
+        break;
+      case "purchasingTime":
+        _api = STATISTICS_PURCHASING_TIME_API;
         break;
     }
     this.$axios

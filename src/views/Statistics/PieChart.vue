@@ -9,7 +9,7 @@ import DataSet from "@antv/data-set";
 
 @Component
 export default class PieChart extends Vue {
-  @Prop(String) type: "category" | "department";
+  @Prop(String) type: "category" | "department" | "purchasingTime";
   @Prop(Array) sourceData: [];
   chart: G2.Chart;
   firstDraw = true;
@@ -160,14 +160,6 @@ export default class PieChart extends Vue {
     this.firstDraw = false;
   }
 
-  repaint() {
-    console.log("repaint");
-    this.chart.repaint();
-  }
-  clear() {
-    console.log("clear");
-    this.chart.clear();
-  }
   destroy() {
     if (!this.firstDraw) {
       this.chart.destroy();
