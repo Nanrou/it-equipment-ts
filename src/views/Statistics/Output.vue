@@ -73,16 +73,56 @@
             icon="el-icon-download"
             @click="handleDownload"
           ></el-button>
-          <a v-else :href="downloadContent.uri">{{ downloadContent.name }}</a>
+          <a
+            v-else
+            :href="downloadContent.uri"
+            :download="downloadContent.name"
+            >{{ downloadContent.name }}</a
+          >
         </div>
       </el-form-item>
     </el-form>
+    <el-dialog title="导出预览" :visible.sync="dialogVisible">
+      <el-table :data="previewData" stripe>
+        <el-table-column label="设备分类" prop="category"></el-table-column>
+        <el-table-column label="品牌厂家" prop="brand">
+          <template slot-scope="scope">
+            <el-tooltip
+              effect="dark"
+              :content="scope.row.modelNumber"
+              placement="top-start"
+            >
+              <span>{{ scope.row.brand }}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="所属部门" prop="department"></el-table-column>
+        <el-table-column label="责任人" prop="owner">
+          <template slot-scope="scope">
+            <el-tooltip
+              effect="dark"
+              :content="'使用人：' + scope.row.user"
+              placement="top-start"
+            >
+              <span>{{ scope.row.owner }}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="购买时间"
+          prop="purchasingTime"
+        ></el-table-column>
+      </el-table>
+      <div style="margin-top: 8px; color: #909399">
+        <i>预览只展示前10条数据供检验过滤条件</i>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { FormOptions } from "@/store/types";
+import { FormOptions, PreviewData } from "@/store/types";
 import {
   EQUIPMENT_FILTER_OPTIONS_API,
   STATISTICS_PREVIEW_API,
@@ -113,6 +153,9 @@ export default class Output extends Vue {
     uri: "",
     name: ""
   };
+
+  dialogVisible = false;
+  previewData: PreviewData[] = [];
 
   requestOptions() {
     this.loadingAtRequestOptions = true;
@@ -165,8 +208,20 @@ export default class Output extends Vue {
   handlePreview() {
     if (this.showDownloadBtn) {
       this.loadingAtPreview = true;
-      console.log(this.handleParams());
-      this.loadingAtPreview = false;
+      this.$axios
+        .get(STATISTICS_PREVIEW_API + this.handleParams())
+        .then((response: AxiosResponse) => {
+          let { errcode, errmsg, data } = response.data;
+          if (errcode === 0) {
+            this.previewData = data;
+            this.dialogVisible = true;
+          } else {
+            this.$message.error(errmsg);
+          }
+        })
+        .finally(() => {
+          this.loadingAtPreview = false;
+        });
     } else {
       this.resetOutputForm();
     }
@@ -174,12 +229,24 @@ export default class Output extends Vue {
 
   handleDownload() {
     this.loadingAtDownload = true;
-    this.loadingAtDownload = false;
-    this.showDownloadBtn = false;
-    this.downloadContent = {
-      uri: "/",
-      name: this.outputPurchasingTime
-    };
+    this.$axios
+      .get(STATISTICS_DOWNLOAD_API + this.handleParams())
+      .then((response: AxiosResponse) => {
+        let { errcode, errmsg, data } = response.data;
+        if (errcode === 0) {
+          this.downloadContent = {
+            uri: data.uri, // 这个下载文件需要nginx转发一下
+            name: data.name
+          };
+          this.showDownloadBtn = false;
+          this.$message.success("导出成功");
+        } else {
+          this.$message.error(errmsg);
+        }
+      })
+      .finally(() => {
+        this.loadingAtDownload = false;
+      });
   }
 
   mounted() {

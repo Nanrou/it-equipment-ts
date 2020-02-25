@@ -19,7 +19,7 @@ export interface Equipment {
   remark: string;
   status: number;
   user: string;
-  owner: string; // todo change table
+  owner: string;
   department: string;
   edit: string;
   del_flag: boolean;
@@ -150,4 +150,16 @@ export class BubbleItem {
     }
     this.draw();
   }
+}
+
+export interface PreviewData {
+  category: string;
+  brand: string;
+  modelNumber: string;
+  serialNumber: string;
+  price: number;
+  purchasingTime: string;
+  user: string;
+  owner: string;
+  department: string;
 }
