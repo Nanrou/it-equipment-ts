@@ -17,6 +17,8 @@ export const EQUIPMENT_QRCODE_API = "/api/equipment/qrcode";
 export const EQUIPMENT_CHANGE_STATUS_API = "/api/equipment/changeStatus";
 export const EQUIPMENT_HARDWARE_API = "/api/equipment/hardware";
 export const EQUIPMENT_FILTER_OPTIONS_API = "/api/equipment/options";
+export const EQUIPMENT_QUERY_WITHOUT_PAGINATION_API =
+  "/api/equipment/queryWithoutPagination";
 
 export const MAINTENANCE_QUERY_API = "/api/maintenance/query";
 export const MAINTENANCE_FLOW_API = "/api/maintenance/flow";
@@ -26,6 +28,8 @@ export const MAINTENANCE_WORKER_API = "/api/maintenance/workers";
 export const MAINTENANCE_DISPATCH_API = "/api/maintenance/dispatch";
 export const MAINTENANCE_REMOTE_API = "/api/maintenance/remote";
 export const MAINTENANCE_FILTER_OPTIONS_API = "/api/maintenance/options";
+export const MAINTENANCE_PATROL_QUERY_API = "/api/maintenance/patrolPlan";
+export const MAINTENANCE_PATROL_CREATE_API = "/api/maintenance/patrol";
 
 export const ORGANIZATION_QUERY_API = "/api/organization/query";
 export const ORGANIZATION_ADD_API = "/api/organization/add";

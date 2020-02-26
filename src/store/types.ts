@@ -165,3 +165,9 @@ export interface PreviewData {
   owner: string;
   department: string;
 }
+
+export interface MaintenancePatrol {
+  pid: string;
+  patrolId: string;
+  name: string;
+}
