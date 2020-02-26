@@ -36,12 +36,35 @@ const routes = [
         name: "maintenance",
         meta: {
           icon: "el-icon-cpu",
-          title: "维修相关"
+          title: "维护相关"
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "maintenance" */ "../views/Maintenance/index.vue"
-          )
+        component: { render: (h: any) => h("router-view") },
+        children: [
+          {
+            path: "/order",
+            name: "order",
+            meta: {
+              icon: "el-icon-phone",
+              title: "日常工单"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "maintenance" */ "../views/Maintenance/Order/index.vue"
+              )
+          },
+          {
+            path: "/patrol",
+            name: "patrol",
+            meta: {
+              icon: "el-icon-time",
+              title: "巡检计划"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "maintenance" */ "../views/Maintenance/Patrol/index.vue"
+              )
+          }
+        ]
       },
       {
         path: "/equipment",

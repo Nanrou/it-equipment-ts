@@ -9,6 +9,94 @@
         <el-form-item label="所属部门">
           <span>{{ user.department }}</span>
         </el-form-item>
+        <el-form-item label="电话">
+          <template v-if="editType === 'phone'">
+            <el-input
+              v-model="newValue"
+              :value="newValue"
+              style="width: 160px"
+            ></el-input>
+            <el-button
+              type="text"
+              icon="el-icon-check"
+              style="margin-left: 4px"
+              :disabled="
+                !Boolean(newValue !== user.phone && newValue.length === 11)
+              "
+              :loading="loadingAtEdit"
+              @click="handleUpdateProfile()"
+            ></el-button>
+            <el-button
+              type="text"
+              icon="el-icon-close"
+              style="margin-left: 4px"
+              @click="
+                () => {
+                  editType = '';
+                  newValue = '';
+                }
+              "
+            ></el-button>
+          </template>
+          <template v-else>
+            <span>{{ user.phone }}</span>
+            <el-button
+              v-show="editType === ''"
+              type="text"
+              icon="el-icon-edit"
+              style="margin-left: 4px"
+              @click="
+                () => {
+                  editType = 'phone';
+                  newValue = user.phone;
+                }
+              "
+            ></el-button>
+          </template>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <template v-if="editType === 'email'">
+            <el-input
+              v-model="newValue"
+              :value="newValue"
+              style="width: 160px"
+            ></el-input>
+            <el-button
+              type="text"
+              icon="el-icon-check"
+              style="margin-left: 4px"
+              :disabled="!Boolean(newValue !== user.email)"
+              :loading="loadingAtEdit"
+              @click="handleUpdateProfile"
+            ></el-button>
+            <el-button
+              type="text"
+              icon="el-icon-close"
+              style="margin-left: 4px"
+              @click="
+                () => {
+                  editType = '';
+                  newValue = '';
+                }
+              "
+            ></el-button>
+          </template>
+          <template v-else>
+            <span>{{ user.email }}</span>
+            <el-button
+              v-show="editType === ''"
+              type="text"
+              icon="el-icon-edit"
+              style="margin-left: 4px"
+              @click="
+                () => {
+                  editType = 'email';
+                  newValue = user.email;
+                }
+              "
+            ></el-button>
+          </template>
+        </el-form-item>
       </el-form>
     </template>
     <template>
@@ -66,15 +154,17 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import { AxiosResponse } from "axios";
-import { State } from "vuex-class";
+import { State, Mutation } from "vuex-class";
 import { StoreUser, ChangePasswordInterface } from "@/store/types";
 import { ElForm } from "element-ui/types/form";
-import { CHANGE_PASSWORD_API } from "@/store/api";
+import { CHANGE_PASSWORD_API, UPDATE_PROFILE_API } from "@/store/api";
+import { SET_LOGIN } from "@/store/constTypes";
 
 @Component
 export default class Profile extends Vue {
   @State("user") user: StoreUser;
   @Ref("passwordForm") passwordFormIns: ElForm;
+  @Mutation(SET_LOGIN) setLogin: any; // SET_LOGIN 是 user/setLogin
 
   loadingAtClick = false;
   passwordForm = {
@@ -83,6 +173,36 @@ export default class Profile extends Vue {
     pass: "",
     checkPass: ""
   };
+  editType: "phone" | "email" | "" = "";
+  newValue: string = "";
+  loadingAtEdit: boolean = false;
+
+  handleUpdateProfile() {
+    this.loadingAtEdit = true;
+    this.$axios
+      .patch(UPDATE_PROFILE_API, {
+        type: this.editType,
+        newValue: this.newValue
+      })
+      .then((response: AxiosResponse) => {
+        let { errcode, errmsg } = response.data;
+        if (errcode === 0) {
+          this.$message.success("更新成功");
+          let _tmp =
+            this.editType === "phone"
+              ? { phone: this.newValue }
+              : { email: this.newValue };
+          this.setLogin(_tmp);
+          this.newValue = "";
+          this.editType = "";
+        } else {
+          this.$message.error(errmsg);
+        }
+      })
+      .finally(() => {
+        this.loadingAtEdit = false;
+      });
+  }
 
   validatePassCompliance = (rule: any, value: string, callback: any) => {
     if (value === "") {

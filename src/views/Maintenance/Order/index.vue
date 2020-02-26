@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import MaintenanceTable from "@/views/Maintenance/MaintenanceTable.vue";
+import MaintenanceTable from "@/views/Maintenance/Order/MaintenanceTable.vue";
 import { MaintenanceOrder } from "@/store/types";
 import { MAINTENANCE_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";

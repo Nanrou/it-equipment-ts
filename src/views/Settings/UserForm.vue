@@ -15,6 +15,9 @@
       <el-form-item label="联系方式" prop="phone">
         <el-input v-model="userForm.phone" :maxlength="12"></el-input>
       </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="userForm.email" :maxlength="12"></el-input>
+      </el-form-item>
       <el-form-item label="所属部门" prop="department">
         <el-input
           v-model="userForm.department"
@@ -61,7 +64,8 @@ export default class UserForm extends Vue {
     department: "",
     phone: "",
     password: "",
-    workNumber: ""
+    workNumber: "",
+    email: ""
   };
   userFormRules = {
     workNumber: [{ required: true, message: "必须填写工号", trigger: "blur" }],
@@ -69,7 +73,8 @@ export default class UserForm extends Vue {
     phone: [{ required: true, message: "必须填写联系方式", trigger: "blur" }],
     department: [
       { required: true, message: "必须选择所属部门", trigger: "blur" }
-    ]
+    ],
+    email: [{ type: "email", message: "邮箱地址错误", trigger: "blur" }]
   };
   roleOptions = RoleOptions;
   roleList = [];

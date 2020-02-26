@@ -5,6 +5,7 @@ export interface StoreUser {
   department: string;
   isGlobal: boolean;
   phone: string;
+  email: string;
 }
 
 export interface Equipment {
@@ -87,6 +88,7 @@ export interface UserData {
   phone: string;
   password?: string;
   workNumber?: string;
+  email?: string;
 }
 
 export interface MaintenanceOrder {

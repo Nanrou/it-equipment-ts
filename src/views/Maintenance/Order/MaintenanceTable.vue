@@ -82,8 +82,8 @@
 <script lang="ts">
 import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { MaintenanceOrder } from "@/store/types";
-import MaintenanceFlow from "@/views/Maintenance/MaintenanceFlow.vue";
-import MaintenanceHandleReceive from "@/views/Maintenance/MaintenanceHandleReceive.vue";
+import MaintenanceFlow from "@/views/Maintenance/Order/MaintenanceFlow.vue";
+import MaintenanceHandleReceive from "@/views/Maintenance/Order/MaintenanceHandleReceive.vue";
 
 @Component({
   components: { MaintenanceFlow, MaintenanceHandleReceive }

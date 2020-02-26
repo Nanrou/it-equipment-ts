@@ -7,7 +7,8 @@ const state = {
   role: -1, // 角色
   department: "", // 所属部门
   isGlobal: false, //部门是否属于global
-  phone: "" // 电话
+  phone: "", // 电话
+  email: "" // 邮箱
 };
 
 const mutations = {
@@ -21,11 +22,12 @@ const mutations = {
     state.department = "";
     state.isGlobal = false;
     state.phone = "";
+    state.email = "";
     window.localStorage.removeItem(LOCAL_TOKEN);
     for (let _key of window.$cookies.keys()) {
       window.$cookies.remove(_key);
     }
-    router.push("/login");
+    router.push("/login").then(() => {});
   }
 };
 
