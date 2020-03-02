@@ -6,6 +6,7 @@
       v-loading="tableLoading"
       row-key="oid"
       style="max-width: 800px"
+      @row-click="handlePatrolDetail"
     >
       <el-table-column
         type="index"
@@ -25,19 +26,24 @@
         </template>
       </el-table-column>
     </el-table>
+    <patrol-detail ref="patrolDetail" />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop, Emit, Ref } from "vue-property-decorator";
 import { MaintenancePatrol } from "@/store/types";
+import PatrolDetail from "@/views/Maintenance/Patrol/PatrolDetail.vue";
 
-@Component
+@Component({
+  components: { PatrolDetail }
+})
 export default class PatrolTable extends Vue {
   @Prop() currentPage: number;
   @Prop() pageSize: number;
   @Prop() tableData: MaintenancePatrol[];
   @Prop() tableLoading: boolean;
+  @Ref("patrolDetail") readonly patrolDetail: PatrolDetail;
 
   indexMethod(index: number) {
     return index + (this.currentPage - 1) * this.pageSize + 1;
@@ -45,6 +51,10 @@ export default class PatrolTable extends Vue {
 
   @Emit("requestData")
   requestData() {}
+
+  handlePatrolDetail(row: MaintenancePatrol) {
+    this.patrolDetail.openDialog(row.pid);
+  }
 }
 </script>
 

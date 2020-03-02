@@ -13,7 +13,7 @@
     <el-dialog
       title="新建巡检计划"
       :visible.sync="dialogVisible"
-      top="5vh"
+      top="1vh"
       width="60%"
     >
       <el-form label-width="120px" inline v-loading="loadingAtRequestOptions">
