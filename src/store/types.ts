@@ -171,3 +171,10 @@ export interface MaintenancePatrol {
   patrolId: string;
   name: string;
 }
+
+export interface PatrolDetailType {
+  department: string;
+  category: string;
+  check: number;
+  checkTime: string;
+}

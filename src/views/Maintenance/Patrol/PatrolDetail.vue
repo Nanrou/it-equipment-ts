@@ -7,7 +7,11 @@
   >
     <el-form inline>
       <el-form-item label="只看未完成的">
-        <el-switch></el-switch>
+        <el-switch
+          v-model="filterUnfinishedFlag"
+          :value="filterUnfinishedFlag"
+          @change="handleSwitch"
+        ></el-switch>
       </el-form-item>
     </el-form>
     <el-table :data="currentTableData">
@@ -54,7 +58,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import { MAINTENANCE_PATROL_DETAIL_API } from "@/store/api";
 import { AxiosResponse } from "axios";
-import { Equipment } from "@/store/types";
+import { PatrolDetailType } from "@/store/types";
 
 @Component
 export default class PatrolDetail extends Vue {
@@ -65,9 +69,12 @@ export default class PatrolDetail extends Vue {
   pageSize = 10;
   currentPage = 1;
   totalPage = 1;
-  tableData: Equipment[] = [];
-  currentTableData: Equipment[] = [];
+  tableData: PatrolDetailType[] = [];
+  currentTableData: PatrolDetailType[] = [];
   tableLoading = false;
+
+  filterUnfinishedFlag = false;
+  unfinishedTable: PatrolDetailType[] = [];
 
   resetTable(data: any) {
     // reset所有相关属性
@@ -77,7 +84,6 @@ export default class PatrolDetail extends Vue {
       (this.currentPage - 1) * this.pageSize,
       this.currentPage * this.pageSize
     );
-    this.tableData = data;
   }
 
   openDialog(pid: string) {
@@ -90,6 +96,7 @@ export default class PatrolDetail extends Vue {
           let { errcode, errmsg, data } = response.data;
           if (errcode === 0) {
             this.resetTable(data);
+            this.tableData = data;
             this.lastPatrolId = pid;
           } else {
             this.$message.error(errmsg);
@@ -110,10 +117,31 @@ export default class PatrolDetail extends Vue {
   }
 
   handleChangePage() {
-    this.currentTableData = this.tableData.slice(
+    let data = this.filterUnfinishedFlag
+      ? this.unfinishedTable
+      : this.tableData;
+    this.currentTableData = data.slice(
       (this.currentPage - 1) * this.pageSize,
       this.currentPage * this.pageSize
     );
+  }
+
+  handleSwitch(val: boolean) {
+    let data: PatrolDetailType[];
+    if (val) {
+      let tmp = [];
+      for (let item of this.tableData) {
+        if (item.check === 0) {
+          tmp.push(item);
+        }
+      }
+      this.unfinishedTable = tmp;
+      data = tmp;
+    } else {
+      data = this.tableData;
+    }
+    this.filterUnfinishedFlag = val;
+    this.resetTable(data);
   }
 }
 </script>
