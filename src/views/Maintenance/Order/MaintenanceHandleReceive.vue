@@ -20,7 +20,8 @@
                 v-for="item in maintenanceWorkers"
                 :key="item.pid"
                 :label="item.name"
-                :value="`${item.pid}|${item.name}`"
+                :value="`${item.pid}|${item.name}|${item.phone}|${item.email}`"
+                :disabled="item.email === null"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -108,13 +109,16 @@ export default class MaintenanceHandleReceive extends Vue {
   loadingAtRequest = false;
   loadingAtSubmit = false;
   oid = "";
+  orderId = "";
 
   maintenanceWorkers: MaintenanceWorker[] = [];
   // workers: string[] = [];
   unless = "";
   worker: MaintenanceWorker = {
     pid: "",
-    name: ""
+    name: "",
+    phone: "",
+    email: ""
   };
   dispatchRemark = "";
 
@@ -152,12 +156,17 @@ export default class MaintenanceHandleReceive extends Vue {
     this.$axios
       .patch(MAINTENANCE_DISPATCH_API + `?oid=${this.oid}`, {
         worker: this.worker,
+        orderId: this.orderId,
         remark: this.dispatchRemark
       })
       .then((response: AxiosResponse) => {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
-          this.$message.success("派遣成功！");
+          this.$message.success("派遣成功，并已邮件通知！");
+          this.requestData();
+          this.closeDialog();
+        } else if (errcode === 100016) {
+          this.$message.warning(errmsg);
           this.requestData();
           this.closeDialog();
         } else {
@@ -188,8 +197,9 @@ export default class MaintenanceHandleReceive extends Vue {
       });
   }
 
-  openDialog(oid: string, eid: string) {
+  openDialog(oid: string, orderId: string, eid: string) {
     this.oid = oid;
+    this.orderId = orderId;
     this.remoteHandleForm.eid = eid;
     this.visible = true;
   }
@@ -202,9 +212,12 @@ export default class MaintenanceHandleReceive extends Vue {
     };
     this.worker = {
       pid: "",
-      name: ""
+      name: "",
+      phone: "",
+      email: ""
     };
     this.oid = "";
+    this.orderId = "";
     this.visible = false;
   }
 
@@ -212,7 +225,9 @@ export default class MaintenanceHandleReceive extends Vue {
     let _tmp = value.split("|");
     this.worker = {
       pid: _tmp[0],
-      name: _tmp[1]
+      name: _tmp[1],
+      phone: _tmp[2],
+      email: _tmp[3]
     };
   }
 

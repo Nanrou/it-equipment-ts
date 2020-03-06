@@ -113,6 +113,8 @@ export interface MaintenanceFlowType {
 export interface MaintenanceWorker {
   pid: string;
   name: string;
+  phone: string;
+  email: string;
 }
 
 export class BubbleItem {

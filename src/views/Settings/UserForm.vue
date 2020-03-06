@@ -16,7 +16,7 @@
         <el-input v-model="userForm.phone" :maxlength="12"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="userForm.email" :maxlength="12"></el-input>
+        <el-input v-model="userForm.email" :maxlength="64"></el-input>
       </el-form-item>
       <el-form-item label="所属部门" prop="department">
         <el-input
