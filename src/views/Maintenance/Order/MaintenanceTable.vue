@@ -44,7 +44,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="120px">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.status === 'R'"
@@ -69,6 +69,14 @@
             </el-tooltip>
           </template>
           <maintenance-flow :oid="scope.row.oid" style="margin-left: 8px" />
+          <template v-if="scope.row.status !== 'R'">
+            <el-button
+              type="text"
+              icon="el-icon-message"
+              style="font-size: 18px"
+              @click="openEmailDialog(scope.row)"
+            ></el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -76,6 +84,7 @@
       ref="handleReceive"
       v-on:requestData="requestData"
     />
+    <email-dialog ref="emailLoading" :email-type="'maintenance'" />
   </div>
 </template>
 
@@ -84,12 +93,14 @@ import { Vue, Component, Ref, Prop, Emit } from "vue-property-decorator";
 import { MaintenanceOrder } from "@/store/types";
 import MaintenanceFlow from "@/views/Maintenance/Order/MaintenanceFlow.vue";
 import MaintenanceHandleReceive from "@/views/Maintenance/Order/MaintenanceHandleReceive.vue";
+import EmailDialog from "@/components/EmailDialog.vue";
 
 @Component({
-  components: { MaintenanceFlow, MaintenanceHandleReceive }
+  components: { MaintenanceFlow, MaintenanceHandleReceive, EmailDialog }
 })
 export default class MaintenanceTable extends Vue {
   @Ref("handleReceive") handleReceiveIns: MaintenanceHandleReceive;
+  @Ref("emailLoading") emailLoadingIns: EmailDialog;
   @Prop() currentPage: number;
   @Prop() pageSize: number;
   @Prop() tableData: MaintenanceOrder[];
@@ -106,6 +117,11 @@ export default class MaintenanceTable extends Vue {
 
   @Emit("requestData")
   requestData() {}
+
+  openEmailDialog(row: MaintenanceOrder) {
+    //@ts-ignore
+    this.emailLoadingIns.openEmailDialog(row.orderId);
+  }
 }
 </script>
 

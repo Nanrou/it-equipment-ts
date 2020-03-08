@@ -162,7 +162,7 @@ export default class MaintenanceHandleReceive extends Vue {
       .then((response: AxiosResponse) => {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
-          this.$message.success("派遣成功，并已邮件通知！");
+          this.$message.success("指派成功，并已邮件通知！");
           this.requestData();
           this.closeDialog();
         } else if (errcode === 100016) {
