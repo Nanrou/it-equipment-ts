@@ -31,6 +31,7 @@ export const MAINTENANCE_FILTER_OPTIONS_API = "/api/maintenance/options";
 export const MAINTENANCE_PATROL_QUERY_API = "/api/maintenance/patrolPlan";
 export const MAINTENANCE_PATROL_CREATE_API = "/api/maintenance/patrol";
 export const MAINTENANCE_PATROL_DETAIL_API = "/api/maintenance/patrolDetail";
+export const MAINTENANCE_DELETE_PATROL_API = "/api/maintenance/patrol";
 export const GET_EMAIL_CONTENT_API = "/api/maintenance/emailContent";
 export const RESEND_MAINTENANCE_EMAIL_API =
   "/api/maintenance/resendMaintenanceEmail";

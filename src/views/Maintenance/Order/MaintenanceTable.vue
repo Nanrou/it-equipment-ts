@@ -84,7 +84,7 @@
       ref="handleReceive"
       v-on:requestData="requestData"
     />
-    <email-dialog ref="emailLoading" :email-type="'maintenance'" />
+    <email-dialog ref="emailDialog" :email-type="'maintenance'" />
   </div>
 </template>
 
@@ -100,7 +100,7 @@ import EmailDialog from "@/components/EmailDialog.vue";
 })
 export default class MaintenanceTable extends Vue {
   @Ref("handleReceive") handleReceiveIns: MaintenanceHandleReceive;
-  @Ref("emailLoading") emailLoadingIns: EmailDialog;
+  @Ref("emailDialog") emailLoadingIns: EmailDialog;
   @Prop() currentPage: number;
   @Prop() pageSize: number;
   @Prop() tableData: MaintenanceOrder[];

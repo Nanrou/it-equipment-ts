@@ -123,7 +123,8 @@
                     v-for="item in maintenanceWorkers"
                     :key="item.pid"
                     :label="item.name"
-                    :value="item.pid"
+                    :value="`${item.pid}|${item.email}`"
+                    :disabled="item.email === null"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -325,15 +326,21 @@ export default class PatrolCreatePlan extends Vue {
 
   handlePublish() {
     this.loadingAtPublish = true;
+    let tmp = this.workerID.split("|");
     this.$axios
       .post(MAINTENANCE_PATROL_CREATE_API, {
-        pid: this.workerID,
+        pid: tmp[0],
+        email: tmp[1],
         eids: Array.from(this.selectedEquipment)
       })
       .then((response: AxiosResponse) => {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
-          this.$message.success("制订成功");
+          this.$message.success("制订成功，并已邮件通知");
+          this.dialogVisible = false;
+          this.requestOutsideData();
+        } else if (errcode === 100016) {
+          this.$message.warning(errmsg);
           this.dialogVisible = false;
           this.requestOutsideData();
         } else {
