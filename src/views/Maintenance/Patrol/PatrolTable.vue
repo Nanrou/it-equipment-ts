@@ -14,8 +14,12 @@
       ></el-table-column>
       <el-table-column label="工单编号" prop="patrolId"> </el-table-column>
       <el-table-column label="负责人" prop="name"> </el-table-column>
-      <el-table-column label="设备总数" prop="total"> </el-table-column>
-      <el-table-column label="计划进度" prop="status">
+      <el-table-column label="计划进度">
+        <template slot-scope="scope">
+          {{ scope.row.unfinished }} / {{ scope.row.total }}
+        </template>
+      </el-table-column>
+      <el-table-column label="计划状态" prop="status">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === 0">进行中</el-tag>
           <el-tag v-else-if="scope.row.status === 1" type="success"
