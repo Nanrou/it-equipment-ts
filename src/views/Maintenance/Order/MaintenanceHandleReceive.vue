@@ -39,7 +39,7 @@
             <el-button
               type="primary"
               size="medium"
-              :disabled="loadingAtRequest || worker.pid.length === 0"
+              :disabled="loadingAtSubmit || worker.pid.length === 0"
               @click="handleDispatchWorker"
               :loading="loadingAtSubmit"
               >确认派工</el-button
