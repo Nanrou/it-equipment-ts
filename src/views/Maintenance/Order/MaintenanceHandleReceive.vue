@@ -218,6 +218,7 @@ export default class MaintenanceHandleReceive extends Vue {
     };
     this.oid = "";
     this.orderId = "";
+    this.unless = "";
     this.visible = false;
   }
 
