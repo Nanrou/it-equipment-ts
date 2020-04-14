@@ -1,5 +1,16 @@
 <template>
   <div>
+    <div style="width: 95%">
+      <span style="float: right">
+        <el-button
+          size="mini"
+          type="text"
+          icon="el-icon-refresh"
+          :loading="tableLoading"
+          @click="requestData"
+        ></el-button>
+      </span>
+    </div>
     <el-table
       :data="tableData"
       stripe

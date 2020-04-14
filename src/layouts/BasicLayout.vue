@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container style="min-height: 100vh">
-      <el-aside :width="collapsed ? '65px' : '280px'" class="side">
+      <el-aside :width="collapsed ? '65px' : '220px'" class="side">
         <div class="logo">{{ collapsed ? "IT" : "IT设备管理系统" }}</div>
         <side-menu :is-collapse="collapsed" />
       </el-aside>
@@ -41,10 +41,10 @@ export default class BasicLayout extends Vue {
 
 <style scoped lang="scss">
 .logo {
-  font-size: 28px;
+  font-size: 24px;
   text-align: center;
-  padding-top: 8px;
-  margin-bottom: 12px;
+  padding-top: 12px;
+  margin-bottom: 24px;
 }
 
 .side {
