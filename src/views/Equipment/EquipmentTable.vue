@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 95%">
+    <div style="width: 95%;max-width: 800px">
       <span style="float: right">
         <el-button
           size="mini"
