@@ -2,10 +2,13 @@
   <div>
     <el-container>
       <el-header height="auto">
-        <el-button type="primary" @click="openDialog">
-          <i class="el-icon-circle-plus-outline"></i>
-          新增设备
-        </el-button>
+        <div>
+          <el-button type="primary" @click="openDialog">
+            <i class="el-icon-circle-plus-outline"></i>
+            新增设备
+          </el-button>
+          <EquipmentOutput style="display: inline; margin-left: 8px" />
+        </div>
         <table-filter-form
           :tableType="'equipment'"
           v-on:getFilterParam="getFilterParam"
@@ -57,12 +60,14 @@ import TableFilterForm from "@/components/TableFilterForm.vue";
 import { Equipment } from "@/store/types";
 import { EQUIPMENT_QUERY_API } from "@/store/api";
 import { AxiosResponse } from "axios";
+import EquipmentOutput from "@/views/Equipment/EquipmentOutput.vue";
 
 @Component({
   components: {
     EquipmentTable,
     EquipmentForm,
-    TableFilterForm
+    TableFilterForm,
+    EquipmentOutput
   }
 })
 export default class EquipmentIndex extends Vue {

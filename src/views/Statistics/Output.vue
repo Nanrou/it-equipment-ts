@@ -62,13 +62,17 @@
         >
       </el-form-item>
       <el-form-item style="width: 420px">
-        <el-button v-loading="loadingAtPreview" @click="handlePreview">{{
-          showDownloadBtn ? "预览结果" : "重置条件"
-        }}</el-button>
+        <el-button
+          v-loading="loadingAtPreview"
+          :disabled="selectedParams"
+          @click="handlePreview"
+          >{{ showDownloadBtn ? "预览结果" : "重置条件" }}</el-button
+        >
         <div style="display: inline; margin-left: 8px">
           <el-button
             v-if="showDownloadBtn"
             v-loading="loadingAtDownload"
+            :disabled="selectedParams"
             circle
             icon="el-icon-download"
             @click="handleDownload"
@@ -247,6 +251,16 @@ export default class Output extends Vue {
       .finally(() => {
         this.loadingAtDownload = false;
       });
+  }
+
+  get selectedParams(): boolean {
+    if (this.outputDepartment.length !== 0) {
+      return false;
+    }
+    if (this.outputCategory.length !== 0) {
+      return false;
+    }
+    return this.outputPurchasingTime.length === 0;
   }
 
   mounted() {

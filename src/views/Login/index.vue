@@ -20,7 +20,7 @@
               <i class="el-icon-phone"></i>
             </el-tooltip>
           </p>
-          <p>@2019 珠海市供水有限公司 调度热线中心</p>
+          <p>@2020 珠海市供水有限公司 调度热线中心</p>
         </div>
       </el-footer>
     </el-container>

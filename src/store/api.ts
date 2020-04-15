@@ -19,6 +19,7 @@ export const EQUIPMENT_HARDWARE_API = "/api/equipment/hardware";
 export const EQUIPMENT_FILTER_OPTIONS_API = "/api/equipment/options";
 export const EQUIPMENT_QUERY_WITHOUT_PAGINATION_API =
   "/api/equipment/queryWithoutPagination";
+export const EQUIPMENT_OUTPUT_API = "/api/equipment/output";
 
 export const MAINTENANCE_QUERY_API = "/api/maintenance/query";
 export const MAINTENANCE_FLOW_API = "/api/maintenance/flow";

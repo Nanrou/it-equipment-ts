@@ -71,6 +71,15 @@ export default class EquipmentDetail extends Vue {
   };
 
   openDialog(equipment: Equipment) {
+    this.hardware = {
+      cpu: "",
+      disk: "",
+      gpu: "",
+      ip: "",
+      mainBoard: "",
+      memory: "",
+      remark: ""
+    };
     this.equipment = equipment;
     this.visible = true;
     if (equipment.category === "台式电脑") {
