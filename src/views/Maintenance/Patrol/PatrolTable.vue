@@ -41,18 +41,22 @@
       </el-table-column>
       <el-table-column label="操作" min-width="100px">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            icon="el-icon-tickets"
-            style="font-size: 18px"
-            @click="handlePatrolDetail(scope.row)"
-          ></el-button>
-          <el-button
-            type="text"
-            icon="el-icon-message"
-            style="font-size: 18px"
-            @click="openEmailDialog(scope.row)"
-          ></el-button>
+          <el-tooltip content="巡检详情" placement="top">
+            <el-button
+              type="text"
+              icon="el-icon-tickets"
+              style="font-size: 18px"
+              @click="handlePatrolDetail(scope.row)"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="邮件详情" placement="top">
+            <el-button
+              type="text"
+              icon="el-icon-message"
+              style="font-size: 18px"
+              @click="openEmailDialog(scope.row)"
+            ></el-button>
+          </el-tooltip>
           <el-button
             type="text"
             icon="el-icon-close"

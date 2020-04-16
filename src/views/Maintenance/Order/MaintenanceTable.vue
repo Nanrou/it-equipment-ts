@@ -79,14 +79,18 @@
               >
             </el-tooltip>
           </template>
-          <maintenance-flow :oid="scope.row.oid" style="margin-left: 8px" />
+          <el-tooltip content="工单进度" placement="top">
+            <maintenance-flow :oid="scope.row.oid" style="margin-left: 8px" />
+          </el-tooltip>
           <template v-if="scope.row.status !== 'R'">
-            <el-button
-              type="text"
-              icon="el-icon-message"
-              style="font-size: 18px"
-              @click="openEmailDialog(scope.row)"
-            ></el-button>
+            <el-tooltip content="邮件详情" placement="top">
+              <el-button
+                type="text"
+                icon="el-icon-message"
+                style="font-size: 18px; margin-left: 4px"
+                @click="openEmailDialog(scope.row)"
+              ></el-button>
+            </el-tooltip>
           </template>
         </template>
       </el-table-column>
