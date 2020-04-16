@@ -3,7 +3,7 @@
     <div style="width: 95%;max-width: 800px">
       <span style="float: right">
         <el-button
-          size="mini"
+          style="font-size: 18px"
           type="text"
           icon="el-icon-refresh"
           :loading="tableLoading"
