@@ -105,5 +105,7 @@ export default class MaintenanceIndex extends Vue {
 .pagination-block {
   text-align: center;
   margin-top: 8px;
+  width: 95%;
+  max-width: 800px;
 }
 </style>
