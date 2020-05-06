@@ -21,7 +21,7 @@
       <el-table-column
         type="index"
         :index="indexMethod"
-        width="40"
+        width="55"
       ></el-table-column>
       <el-table-column label="设备分类" prop="category"></el-table-column>
       <el-table-column label="品牌厂家" prop="brand">
