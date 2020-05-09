@@ -36,7 +36,8 @@ const routes = [
         name: "maintenance",
         meta: {
           icon: "el-icon-cpu",
-          title: "维护相关"
+          title: "维护相关",
+          permission: 0b000100
         },
         component: { render: (h: any) => h("router-view") },
         children: [
@@ -139,7 +140,8 @@ const routes = [
             name: "admin",
             meta: {
               icon: "el-icon-user",
-              title: "用户管理"
+              title: "用户管理",
+              permission: 0b100000
             },
             component: () =>
               import(
@@ -151,7 +153,8 @@ const routes = [
             name: "department",
             meta: {
               icon: "el-icon-office-building",
-              title: "部门架构"
+              title: "部门架构",
+              permission: 0b100000
             },
             component: () =>
               import(
@@ -163,7 +166,8 @@ const routes = [
             name: "system",
             meta: {
               icon: "el-icon-cpu",
-              title: "系统配置"
+              title: "系统配置",
+              permission: 0b100000
             },
             component: () =>
               import(
