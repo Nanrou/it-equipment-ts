@@ -24,6 +24,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button @click.stop="resetPassword(scope.row)">重置密码</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-dialog
       title="新增用户"
@@ -69,7 +74,12 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import { UserData } from "@/store/types";
-import { ADMIN_API, CREATE_USER_API, UPDATE_USER_API } from "@/store/api";
+import {
+  ADMIN_API,
+  CREATE_USER_API,
+  UPDATE_USER_API,
+  RESET_PASSWORD_API
+} from "@/store/api";
 import { AxiosResponse } from "axios";
 import UserForm from "@/views/Settings/UserForm.vue";
 import { RoleOptions } from "@/store/constTypes";
@@ -163,6 +173,41 @@ export default class Admin extends Vue {
           this.loadingAtSubmit = false;
         });
     }
+  }
+
+  resetPassword(row: UserData) {
+    this.$msgbox({
+      message: "确定重置此账户密码为 8888 吗？",
+      title: "警告",
+      showCancelButton: true,
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      beforeClose: (action, instance, done) => {
+        if (action === "confirm") {
+          instance.confirmButtonLoading = true;
+          instance.confirmButtonText = "执行中...";
+          this.$axios
+            .patch(RESET_PASSWORD_API + `?uid=${row.uid}`)
+            .then((response: AxiosResponse) => {
+              let { errcode, errmsg } = response.data;
+              if (errcode === 0) {
+                this.$message.success("操作成功！");
+              } else {
+                this.$message.error(errmsg);
+              }
+            })
+            .finally(() => {
+              instance.confirmButtonLoading = false;
+              instance.confirmButtonText = "确定";
+              done();
+            });
+        } else {
+          done();
+        }
+      }
+    })
+      .then(() => {})
+      .catch(() => {});
   }
 
   mounted() {

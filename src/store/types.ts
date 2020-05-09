@@ -80,7 +80,7 @@ export interface ChangePasswordInterface {
 }
 
 export interface UserData {
-  pid?: string;
+  uid?: string;
   username: string;
   name: string;
   role: number;

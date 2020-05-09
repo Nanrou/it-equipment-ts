@@ -60,4 +60,8 @@ export default class EquipmentDrawer extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style>
+.el-drawer {
+  display: inline-table;
+}
+</style>
