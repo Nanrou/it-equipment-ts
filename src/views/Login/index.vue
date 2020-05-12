@@ -1,8 +1,8 @@
 <template>
   <div>
     <bubble-canvas />
-    <el-container style="height: 100vh">
-      <el-main>
+    <el-container style="height: 100vh;display:flex;justify-content: center">
+      <el-main style="flex: 0;overflow: initial">
         <login-form class="login-card" />
       </el-main>
       <el-footer>
@@ -42,8 +42,8 @@ export default class LoginIndex extends Vue {}
 .login-card {
   margin: auto;
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  /*top: 50%;*/
+  /*transform: translateY(-50%);*/
 }
 .login-footer {
   color: #3c3c3c;
