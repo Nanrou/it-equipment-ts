@@ -87,7 +87,7 @@ export default class EquipmentDetail extends Vue {
     };
     this.equipment = equipment;
     this.visible = true;
-    if (equipment.category === "台式电脑") {
+    if (this.hardwareEquipment.indexOf(equipment.category) > -1) {
       this.loading = true;
       this.$axios
         .get(EQUIPMENT_HARDWARE_API + `?eid=${equipment.eid}`)
