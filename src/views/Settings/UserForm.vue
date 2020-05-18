@@ -101,7 +101,7 @@ export default class UserForm extends Vue {
   outputUserForm() {
     this.userFormIns.validate(valid => {
       if (valid) {
-        this.userForm.username = this.userForm.workNumber + this.userForm.name;
+        this.userForm.username = this.userForm.name + this.userForm.workNumber;
         this.handleValidCallback(this.userForm);
       } else {
         this.handleValidCallback(false);
