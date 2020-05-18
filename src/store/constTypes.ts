@@ -56,3 +56,5 @@ export const ConfigMapper = {
   sendSms: "发送短信",
   sendEmail: "发送邮件"
 };
+
+export const HardwareEquipment = ["台式电脑", "笔记本电脑", "工控机"];

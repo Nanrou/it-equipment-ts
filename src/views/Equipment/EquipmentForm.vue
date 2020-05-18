@@ -21,7 +21,7 @@
             :value="c.value"
           ></el-option>
         </el-select>
-        <template v-if="equipmentForm.category === '台式电脑'">
+        <template v-if="hardwareEquipment.indexOf(equipmentForm.category) > -1">
           <template v-if="action === 'add'">
             <el-button
               size="medium"
@@ -224,7 +224,7 @@ import {
   AddEquipmentInterface,
   TreeNode
 } from "@/store/types";
-import { CategoryOptions } from "@/store/constTypes";
+import { CategoryOptions, HardwareEquipment } from "@/store/constTypes";
 import {
   EQUIPMENT_ADD_API,
   EQUIPMENT_UPDATE_API,
@@ -273,6 +273,7 @@ export default class EquipmentFrom extends Vue {
     gpu: "",
     ip: "",
     mainBoard: "",
+    monitor: "",
     memory: "",
     remark: ""
   };
@@ -292,6 +293,7 @@ export default class EquipmentFrom extends Vue {
       { required: true, message: "必须填写购买时间", trigger: "blur" }
     ]
   };
+  hardwareEquipment = HardwareEquipment;
 
   // 检查status为使用中的情况下的规则约束
   checkStatusValidate(equipment: Equipment): boolean {

@@ -28,9 +28,9 @@
         使用人：{{ equipment.user }}
       </p>
     </div>
-    <template v-if="equipment.category === '台式电脑'">
+    <template v-if="hardwareEquipment.indexOf(equipment.category) > -1">
       <el-divider />
-      <template v-loading="loading" element-loading-text="正常查找硬件设备..">
+      <template v-loading="loading" element-loading-text="正在查找硬件设备..">
         <p>IP地址：{{ hardware.ip || "无记录" }}</p>
         <p>
           CPU：{{ hardware.cpu || "无记录" }}
@@ -43,6 +43,7 @@
           内存：{{ hardware.memory || "无记录" }}
         </p>
         <p>硬盘：{{ hardware.disk || "无记录" }}</p>
+        <p>显示器：{{ hardware.monitor || "无记录" }}</p>
         <p>备注：{{ hardware.remark || "无" }}</p>
       </template>
     </template>
@@ -54,6 +55,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { Equipment, Hardware } from "@/store/types";
 import { EQUIPMENT_HARDWARE_API } from "@/store/api";
 import { AxiosResponse } from "axios";
+import { HardwareEquipment } from "@/store/constTypes";
 
 @Component
 export default class EquipmentDetail extends Vue {
@@ -67,8 +69,10 @@ export default class EquipmentDetail extends Vue {
     ip: "",
     mainBoard: "",
     memory: "",
+    monitor: "",
     remark: ""
   };
+  hardwareEquipment = HardwareEquipment;
 
   openDialog(equipment: Equipment) {
     this.hardware = {
@@ -78,6 +82,7 @@ export default class EquipmentDetail extends Vue {
       ip: "",
       mainBoard: "",
       memory: "",
+      monitor: "",
       remark: ""
     };
     this.equipment = equipment;

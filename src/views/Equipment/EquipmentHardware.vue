@@ -18,42 +18,49 @@
         <el-input
           v-model="hardwareForm.ip"
           placeholder="请填写iPv4的地址"
-          :maxlength="16"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="CPU" prop="cpu">
         <el-input
           v-model="hardwareForm.cpu"
           placeholder="请填写CPU的型号"
-          :maxlength="16"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="显卡" prop="gpu">
         <el-input
           v-model="hardwareForm.gpu"
           placeholder="请填写显卡的型号"
-          :maxlength="16"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="主板" prop="mainBoard">
         <el-input
           v-model="hardwareForm.mainBoard"
           placeholder="请填写主板型号"
-          :maxlength="16"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="内存" prop="memory">
         <el-input
           v-model="hardwareForm.memory"
           placeholder="请填写内存型号及大小"
-          :maxlength="16"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="硬盘" prop="disk">
         <el-input
           v-model="hardwareForm.disk"
           placeholder="请填写硬盘的型号及容量大小"
-          :maxlength="16"
+          :maxlength="32"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="显示器" prop="monitor">
+        <el-input
+          v-model="hardwareForm.monitor"
+          placeholder="请填写显示器信息"
+          :maxlength="32"
         ></el-input>
       </el-form-item>
       <el-form-item label="备注">
@@ -108,6 +115,7 @@ export default class EquipmentHardware extends Vue {
     ip: string;
     mainBoard: string;
     memory: string;
+    monitor: string;
     remark: string;
   })();
 
@@ -118,6 +126,7 @@ export default class EquipmentHardware extends Vue {
     ip: string;
     mainBoard: string;
     memory: string;
+    monitor: string;
     remark: string;
   })();
 

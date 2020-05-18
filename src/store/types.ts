@@ -56,6 +56,7 @@ export interface Hardware {
   mainBoard: string;
   memory: string;
   disk: string;
+  monitor: string;
   remark: string;
 }
 
