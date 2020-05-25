@@ -8,6 +8,8 @@ export const ADMIN_API = "/api/user/admin";
 export const CONFIG_API = "/api/user/config";
 export const CREATE_USER_API = "/api/user/create";
 export const UPDATE_USER_API = "/api/user/update";
+export const SET_DEPARTMENT_CONTACT_API = "/api/user/updateDepartmentContact";
+export const GET_DEPARTMENT_CONTACT_API = "/api/user/getDepartmentContact";
 
 export const EQUIPMENT_ADD_API = "/api/equipment/add";
 export const EQUIPMENT_UPDATE_API = "/api/equipment/update";

@@ -10,7 +10,7 @@
           :data="treeData"
           node-key="key"
           :default-expand-all="true"
-          style="width: 480px; margin-left: 48px"
+          style="max-width: 720px; margin-left: 48px"
         >
           <span class="tree-span" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
@@ -30,6 +30,7 @@
                 style="color: darkred"
                 >删除</el-button
               >
+              <department-contact-button :did="data.value" />
             </span>
           </span>
         </el-tree>
@@ -52,8 +53,11 @@ import {
   UpdateDepartmentLabelInterface,
   AddDepartmentLabelInterface
 } from "@/store/types";
+import DepartmentContactButton from "./DepartmentContactButton.vue";
 
-@Component
+@Component({
+  components: { DepartmentContactButton }
+})
 export default class Department extends Vue {
   loadingAtRequest = false;
   treeData: TreeNode[] = [

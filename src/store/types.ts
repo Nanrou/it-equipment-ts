@@ -181,3 +181,9 @@ export interface PatrolDetailType {
   check: number;
   checkTime: string;
 }
+
+export interface DepartmentContact {
+  pid: string;
+  name: string;
+  phone: string;
+}
