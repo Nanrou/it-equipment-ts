@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-header height="100px">
+      <el-header height="50px">
         <patrol-create-plan v-on:requestData="requestData"></patrol-create-plan>
       </el-header>
       <el-main>

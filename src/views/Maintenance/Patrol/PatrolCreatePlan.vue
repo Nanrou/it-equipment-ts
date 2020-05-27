@@ -111,37 +111,46 @@
           </el-pagination>
         </div>
         <el-row style="margin-top: 12px">
-          <el-col :span="16">
-            <el-form inline>
-              <el-form-item label="巡检人员">
-                <el-select
-                  :value="workerID"
-                  v-model="workerID"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in maintenanceWorkers"
-                    :key="item.pid"
-                    :label="item.name"
-                    :value="`${item.pid}|${item.email}`"
-                    :disabled="item.email === null"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :offset="3" :span="4">
-            <el-button
-              type="primary"
-              :disabled="selectedCount === 0 || workerID === ''"
-              :loading="loadingAtPublish"
-              @click="handlePublish"
-              >制订计划</el-button
-            >
-          </el-col>
+          <el-form>
+            <el-form-item label="巡检人员">
+              <el-select
+                :value="workerID"
+                v-model="workerID"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in maintenanceWorkers"
+                  :key="item.pid"
+                  :label="item.name"
+                  :value="`${item.pid}|${item.email}`"
+                  :disabled="item.email === null"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="巡检日期">
+              <el-date-picker
+                v-model="patrolTime"
+                type="daterange"
+                value-format="yyyy-MM-dd"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+          </el-form>
         </el-row>
       </template>
-      <template slot="footer"> </template>
+      <template slot="footer">
+        <el-button
+          v-if="tableData.length > 0"
+          type="primary"
+          :disabled="
+            selectedCount === 0 || workerID === '' || patrolTime.length !== 2
+          "
+          :loading="loadingAtPublish"
+          @click="handlePublish"
+          >制订计划</el-button
+        >
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -182,6 +191,7 @@ export default class PatrolCreatePlan extends Vue {
   workerID: string = "";
   maintenanceWorkers: MaintenanceWorker[] = [];
   loadingAtPublish = false;
+  patrolTime = [];
 
   requestOptions() {
     this.loadingAtRequestOptions = true;
@@ -215,6 +225,7 @@ export default class PatrolCreatePlan extends Vue {
   resetDialog() {
     this.outputDepartment = [];
     this.workerID = "";
+    this.patrolTime = [];
     this.loadingAtPublish = false;
     this.resetTable([]);
   }
@@ -270,7 +281,9 @@ export default class PatrolCreatePlan extends Vue {
     if (val.length > 0) {
       val.forEach(item => this.selectedEquipment.add(item.eid));
     } else {
-      val.forEach(item => this.selectedEquipment.delete(item.eid));
+      this.currentTableData.forEach(item =>
+        this.selectedEquipment.delete(item.eid)
+      );
     }
     this.selectedCount = this.selectedEquipment.size;
   }
@@ -295,7 +308,7 @@ export default class PatrolCreatePlan extends Vue {
 
   handleCurrentPageSelect() {
     this.$nextTick(() => {
-      if (this.selectedEquipment.size) {
+      if (this.selectedEquipment.size > 0) {
         for (let row of this.currentTableData) {
           if (this.selectedEquipment.has(row.eid)) {
             this.equipmentTable.toggleRowSelection(row, true);
@@ -303,6 +316,8 @@ export default class PatrolCreatePlan extends Vue {
             this.equipmentTable.toggleRowSelection(row, false);
           }
         }
+      } else {
+        this.equipmentTable.clearSelection();
       }
     });
   }
@@ -331,12 +346,14 @@ export default class PatrolCreatePlan extends Vue {
       .post(MAINTENANCE_PATROL_CREATE_API, {
         pid: tmp[0],
         email: tmp[1],
-        eids: Array.from(this.selectedEquipment)
+        eids: Array.from(this.selectedEquipment),
+        startTime: this.patrolTime[0],
+        endTime: this.patrolTime[1]
       })
       .then((response: AxiosResponse) => {
         let { errcode, errmsg } = response.data;
         if (errcode === 0) {
-          this.$message.success("制订成功，并已邮件通知");
+          this.$message.success("巡检计划制订成功");
           this.dialogVisible = false;
           this.requestOutsideData();
         } else if (errcode === 100016) {
