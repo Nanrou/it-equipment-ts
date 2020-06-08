@@ -4,6 +4,10 @@ import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
 
 import store from "../store";
+
+import { ALIVE_API } from "@/store/api";
+import { LOCAL_TOKEN, SET_LOGIN } from "@/store/constTypes";
+import { AxiosResponse } from "axios";
 // import NotFound from "../views/404.vue";
 
 Vue.use(VueRouter);
@@ -198,7 +202,29 @@ router.beforeEach((to, from, next) => {
   if (to.path !== from.path) {
     Nprogress.start();
   }
-  next();
+
+  // @ts-ignore
+  if (store.state.user.isLogin) {
+    next();
+  } else if (to.path === "/login") {
+    next();
+  } else {
+    if (window.localStorage.getItem(LOCAL_TOKEN)) {
+      Vue.prototype.$axios.get(ALIVE_API).then((response: AxiosResponse) => {
+        let { errcode, errmsg, data } = response.data;
+        if (errcode === 0) {
+          store.commit(SET_LOGIN, data);
+          Vue.prototype.$message.success("欢迎回来！");
+          next("/");
+        } else {
+          Vue.prototype.$message.error(errmsg);
+          next("/login");
+        }
+      });
+    } else {
+      next("/login");
+    }
+  }
 });
 
 router.afterEach(() => {

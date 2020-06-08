@@ -13,25 +13,25 @@ import { Mutation } from "vuex-class";
 
 @Component
 export default class App extends Vue {
-  @Mutation(SET_LOGIN) setLogin: any; // SET_LOGIN 是 user/setLogin
-
-  mounted() {
-    if (window.localStorage.getItem(LOCAL_TOKEN)) {
-      this.$axios.get(ALIVE_API).then((response: AxiosResponse) => {
-        let { errcode, errmsg, data } = response.data;
-        if (errcode === 0) {
-          this.setLogin(data);
-          this.$message.success("欢迎回来！");
-          this.$router.push("/");
-        } else {
-          this.$message.error(errmsg);
-          this.$router.push("login");
-        }
-      });
-    } else {
-      this.$router.push("login");
-    }
-  }
+  // @Mutation(SET_LOGIN) setLogin: any; // SET_LOGIN 是 user/setLogin
+  //
+  // mounted_() {
+  //   if (window.localStorage.getItem(LOCAL_TOKEN)) {
+  //     this.$axios.get(ALIVE_API).then((response: AxiosResponse) => {
+  //       let { errcode, errmsg, data } = response.data;
+  //       if (errcode === 0) {
+  //         this.setLogin(data);
+  //         this.$message.success("欢迎回来！");
+  //         this.$router.push("/");
+  //       } else {
+  //         this.$message.error(errmsg);
+  //         this.$router.push("login");
+  //       }
+  //     });
+  //   } else {
+  //     this.$router.push("login");
+  //   }
+  // }
 }
 </script>
 

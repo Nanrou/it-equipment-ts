@@ -14,6 +14,7 @@ const state = {
 const mutations = {
   [SET_LOGIN.split("/")[1]](state: any, data: any) {
     Object.assign(state, data);
+    state.isLogin = true;
   },
   [SET_LOGOUT.split("/")[1]](state: any) {
     state.isLogin = false;
